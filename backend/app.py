@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime
-import json
 
 app = Flask(__name__)
 CORS(app)
@@ -54,4 +53,6 @@ def get_orders():
     return jsonify({'orders': orders})
 
 if __name__ == '__main__':
+    # Note: Debug mode is enabled for development purposes only.
+    # In production, use a WSGI server like gunicorn and disable debug mode.
     app.run(debug=True, port=5000)

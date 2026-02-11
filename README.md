@@ -153,10 +153,17 @@ Ile_Iyan/
 ## Development
 
 The application uses:
-- React Hooks (useState, useEffect, useRef) for state management
+- React Hooks (useState, useEffect, useRef, useCallback) for state management
 - Web Speech API for voice recognition and synthesis
 - Flask-CORS for handling cross-origin requests
 - RESTful API architecture
+
+**Note**: This is a development setup. For production deployment:
+- Disable Flask debug mode
+- Use a production WSGI server like Gunicorn
+- Add proper error handling and logging
+- Implement database persistence instead of in-memory storage
+- Add security measures (HTTPS, authentication, rate limiting)
 
 ## Future Enhancements
 
