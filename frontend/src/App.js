@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './App.css';
 
 function App() {
@@ -13,63 +13,8 @@ function App() {
   const recognitionRef = useRef(null);
   const synthRef = useRef(window.speechSynthesis);
 
-  // Initialize speech recognition
-  useEffect(() => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    
-    if (!SpeechRecognition) {
-      setOrderStatus('Speech recognition not supported in this browser. Please use Chrome or Edge.');
-      return;
-    }
-
-    const recognition = new SpeechRecognition();
-    recognition.continuous = true;
-    recognition.interimResults = false;
-    recognition.lang = 'en-US';
-
-    recognition.onstart = () => {
-      setIsListening(true);
-    };
-
-    recognition.onend = () => {
-      setIsListening(false);
-      // Auto-restart if not in welcome state
-      if (currentState !== 'welcome') {
-        setTimeout(() => {
-          try {
-            recognition.start();
-          } catch (e) {
-            console.log('Recognition restart error:', e);
-          }
-        }, 100);
-      }
-    };
-
-    recognition.onerror = (event) => {
-      console.error('Speech recognition error:', event.error);
-      if (event.error !== 'no-speech' && event.error !== 'aborted') {
-        setOrderStatus(`Error: ${event.error}`);
-      }
-    };
-
-    recognition.onresult = (event) => {
-      const current = event.resultIndex;
-      const transcriptResult = event.results[current][0].transcript.toLowerCase().trim();
-      setTranscript(transcriptResult);
-      handleVoiceCommand(transcriptResult);
-    };
-
-    recognitionRef.current = recognition;
-
-    return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.stop();
-      }
-    };
-  }, [currentState]);
-
   // Text-to-Speech function
-  const speak = (text) => {
+  const speak = useCallback((text) => {
     return new Promise((resolve) => {
       if (synthRef.current.speaking) {
         synthRef.current.cancel();
@@ -93,10 +38,56 @@ function App() {
       
       synthRef.current.speak(utterance);
     });
-  };
+  }, []);
+
+  // Reset order state
+  const resetOrder = useCallback(() => {
+    setCurrentState('welcome');
+    setCustomerName('');
+    setQuantity(1);
+    setTranscript('');
+  }, []);
+
+  // Place order via API
+  const placeOrder = useCallback(async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customer_name: customerName,
+          quantity: quantity
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setOrderStatus(data.message);
+        await speak(data.message);
+        setTimeout(() => {
+          resetOrder();
+          const welcomeMsg = 'Thank you! Say "start order" to place another order.';
+          setOrderStatus(welcomeMsg);
+          speak(welcomeMsg);
+        }, 3000);
+      } else {
+        setOrderStatus('Error placing order. Please try again.');
+        await speak('Error placing order. Please try again.');
+        resetOrder();
+      }
+    } catch (error) {
+      console.error('Order error:', error);
+      setOrderStatus('Cannot connect to server. Please make sure the backend is running.');
+      await speak('Cannot connect to server. Please try again later.');
+      resetOrder();
+    }
+  }, [customerName, quantity, speak, resetOrder]);
 
   // Handle voice commands based on current state
-  const handleVoiceCommand = async (command) => {
+  const handleVoiceCommand = useCallback(async (command) => {
     console.log('Command:', command, 'State:', currentState);
 
     if (currentState === 'welcome') {
@@ -154,56 +145,65 @@ function App() {
         await speak(message);
       }
     }
-  };
+  }, [currentState, speak, placeOrder, resetOrder]);
 
-  // Place order via API
-  const placeOrder = async () => {
-    try {
-      const response = await fetch('http://localhost:5000/api/order', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          customer_name: customerName,
-          quantity: quantity
-        })
-      });
-
-      const data = await response.json();
-      
-      if (data.success) {
-        setOrderStatus(data.message);
-        await speak(data.message);
-        setTimeout(() => {
-          resetOrder();
-          const welcomeMsg = 'Thank you! Say "start order" to place another order.';
-          setOrderStatus(welcomeMsg);
-          speak(welcomeMsg);
-        }, 3000);
-      } else {
-        setOrderStatus('Error placing order. Please try again.');
-        await speak('Error placing order. Please try again.');
-        resetOrder();
-      }
-    } catch (error) {
-      console.error('Order error:', error);
-      setOrderStatus('Cannot connect to server. Please make sure the backend is running.');
-      await speak('Cannot connect to server. Please try again later.');
-      resetOrder();
+  // Initialize speech recognition
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+    if (!SpeechRecognition) {
+      setOrderStatus('Speech recognition not supported in this browser. Please use Chrome or Edge.');
+      return;
     }
-  };
 
-  // Reset order state
-  const resetOrder = () => {
-    setCurrentState('welcome');
-    setCustomerName('');
-    setQuantity(1);
-    setTranscript('');
-  };
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onstart = () => {
+      setIsListening(true);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+      // Auto-restart if not in welcome state
+      if (currentState !== 'welcome') {
+        setTimeout(() => {
+          try {
+            recognition.start();
+          } catch (e) {
+            console.log('Recognition restart error:', e);
+          }
+        }, 100);
+      }
+    };
+
+    recognition.onerror = (event) => {
+      console.error('Speech recognition error:', event.error);
+      if (event.error !== 'no-speech' && event.error !== 'aborted') {
+        setOrderStatus(`Error: ${event.error}`);
+      }
+    };
+
+    recognition.onresult = (event) => {
+      const current = event.resultIndex;
+      const transcriptResult = event.results[current][0].transcript.toLowerCase().trim();
+      setTranscript(transcriptResult);
+      handleVoiceCommand(transcriptResult);
+    };
+
+    recognitionRef.current = recognition;
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, [currentState, handleVoiceCommand]);
 
   // Start voice interaction
-  const startVoiceInteraction = async () => {
+  const startVoiceInteraction = useCallback(async () => {
     const welcomeMessage = 'Welcome to Ile Iyan! We serve delicious Pounded Yam. Say "start order" to begin.';
     setOrderStatus(welcomeMessage);
     await speak(welcomeMessage);
@@ -215,7 +215,7 @@ function App() {
         console.log('Recognition already started');
       }
     }
-  };
+  }, [speak]);
 
   useEffect(() => {
     // Auto-start when component mounts
@@ -224,7 +224,7 @@ function App() {
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [startVoiceInteraction]);
 
   return (
     <div className="App">
