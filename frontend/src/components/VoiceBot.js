@@ -51,14 +51,21 @@ export default function VoiceBot({ menu, onNavigate }) {
   );
 
   useEffect(() => {
+    let cancelled = false;
     // Initial greeting
     getBotGreeting()
-      .then((data) => addBotMessage(data.message))
-      .catch(() =>
-        addBotMessage(
-          "Welcome to Ilé Ìyán! I'm your voice ordering assistant. What would you like to order today?"
-        )
-      );
+      .then((data) => {
+        if (!cancelled) addBotMessage(data.message);
+      })
+      .catch(() => {
+        if (!cancelled)
+          addBotMessage(
+            "Welcome to Ilé Ìyán! I'm your voice ordering assistant. What would you like to order today?"
+          );
+      });
+    return () => {
+      cancelled = true;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
