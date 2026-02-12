@@ -515,7 +515,7 @@ def _process_bot_message(message, cart, state):
             return {
                 "message": (
                     "Your order has been placed! "
-                    "Thank you for choosing Ile Iyan. Enjoy your meal! 🍽️"
+                    "Thank you for choosing Ile Iyan. Enjoy your meal!"
                 ),
                 "state": "complete",
                 "cart": cart,
