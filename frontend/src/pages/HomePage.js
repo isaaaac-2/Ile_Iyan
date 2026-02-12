@@ -1,6 +1,32 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { fetchMenu } from "../services/api";
+import { useCart } from "../context/CartContext";
 
 export default function HomePage({ onNavigate }) {
+  const [menu, setMenu] = useState(null);
+  const { dispatch } = useCart();
+
+  useEffect(() => {
+    fetchMenu()
+      .then((data) => setMenu(data))
+      .catch(() => {});
+  }, []);
+
+  const addComboToCart = (combo) => {
+    dispatch({
+      type: "ADD_ITEM",
+      payload: {
+        soups: combo.soups,
+        proteins: [],
+        iyan_quantity: "2",
+        protein_quantity: "2",
+        quantity: 1,
+      },
+    });
+    // Navigate to cart/order page
+    onNavigate("order");
+  };
+
   return (
     <div className="home-page">
       <section className="hero">
@@ -40,16 +66,16 @@ export default function HomePage({ onNavigate }) {
             <span className="feature-icon">🫕</span>
             <h3>Premium Iyan</h3>
             <p>
-              Smooth, perfectly pounded yam made fresh daily with the finest
-              yam tubers
+              Smooth, perfectly pounded yam made fresh daily with the finest yam
+              tubers
             </p>
           </div>
           <div className="feature-card">
             <span className="feature-icon">🥘</span>
             <h3>10+ Soup Options</h3>
             <p>
-              From Egusi to Afang — explore a rich variety of Nigerian soups
-              and combine them
+              From Egusi to Afang — explore a rich variety of Nigerian soups and
+              combine them
             </p>
           </div>
           <div className="feature-card">
@@ -74,22 +100,27 @@ export default function HomePage({ onNavigate }) {
       <section className="combos-preview">
         <h2 className="section-title">Popular Combos</h2>
         <div className="combos-grid">
-          <div className="combo-card highlight">
-            <span className="combo-badge">🔥 Most Popular</span>
-            <h3>The Abula Special</h3>
-            <p>Ewedu + Gbegiri — the legendary combo</p>
-            <span className="combo-savings">Save ₦500</span>
-          </div>
-          <div className="combo-card">
-            <h3>Double Green</h3>
-            <p>Egusi + Efo Riro — rich and nutritious</p>
-            <span className="combo-savings">Save ₦300</span>
-          </div>
-          <div className="combo-card">
-            <h3>Draw & Thick</h3>
-            <p>Ogbono + Egusi — ultimate texture</p>
-            <span className="combo-savings">Save ₦400</span>
-          </div>
+          {menu &&
+            menu.combos.map((combo, idx) => (
+              <div
+                key={combo.id}
+                className={`combo-card ${idx === 0 ? "highlight" : ""}`}
+              >
+                {idx === 0 && (
+                  <span className="combo-badge">🔥 Most Popular</span>
+                )}
+                <h3>{combo.name}</h3>
+                <p>{combo.description}</p>
+                <span className="combo-savings">Save ₦{combo.discount}</span>
+                <button
+                  className="btn btn-primary btn-sm"
+                  onClick={() => addComboToCart(combo)}
+                  style={{ marginTop: "12px", width: "100%" }}
+                >
+                  Quick Add →
+                </button>
+              </div>
+            ))}
         </div>
         <button
           className="btn btn-outline btn-lg"

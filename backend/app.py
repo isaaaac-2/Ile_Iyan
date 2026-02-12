@@ -10,6 +10,23 @@ import tempfile
 app = Flask(__name__)
 CORS(app)
 
+# ─── Root Route ───────────────────────────────────────────────────────────────
+
+@app.route("/", methods=["GET"])
+def index():
+    """Root endpoint - API information."""
+    return jsonify({
+        "service": "Ile Iyan API",
+        "version": "1.0.0",
+        "description": "Backend API for Ile Iyan - Nigerian soup and pounded yam ordering system",
+        "endpoints": {
+            "menu": "/api/menu",
+            "health": "/api/health",
+            "orders": "/api/order",
+            "bot": "/api/bot/greeting"
+        }
+    })
+
 # ─── Menu Data ───────────────────────────────────────────────────────────────
 
 SOUPS = [
@@ -114,6 +131,18 @@ PORTION_SIZES = [
     {"id": "large", "name": "Large", "multiplier": 2.0},
 ]
 
+IYAN_QUANTITIES = [
+    {"id": "1", "name": "1 Wrap", "multiplier": 0.75},
+    {"id": "2", "name": "2 Wraps", "multiplier": 1.25},
+    {"id": "3", "name": "3 Wraps", "multiplier": 1.75},
+]
+
+PROTEIN_QUANTITIES = [
+    {"id": "1", "name": "1 Piece", "multiplier": 0.5},
+    {"id": "2", "name": "2 Pieces", "multiplier": 1.0},
+    {"id": "3", "name": "3 Pieces", "multiplier": 1.5},
+]
+
 POPULAR_COMBOS = [
     {
         "id": "amala_combo",
@@ -154,6 +183,8 @@ def get_menu():
             "soups": SOUPS,
             "proteins": PROTEIN_OPTIONS,
             "portions": PORTION_SIZES,
+            "iyan_quantities": IYAN_QUANTITIES,
+            "protein_quantities": PROTEIN_QUANTITIES,
             "combos": POPULAR_COMBOS,
         }
     )
@@ -189,7 +220,8 @@ def create_order():
     for item in items:
         soup_ids = item.get("soups", [])
         protein_ids = item.get("proteins", [])
-        portion = item.get("portion", "small")
+        iyan_quantity = item.get("iyan_quantity", "2")
+        protein_quantity = item.get("protein_quantity", "2")
         quantity = item.get("quantity", 1)
 
         if not soup_ids:
@@ -205,8 +237,11 @@ def create_order():
         protein_price = sum(
             p["price"] for p in PROTEIN_OPTIONS if p["id"] in protein_ids
         )
-        portion_mult = next(
-            (p["multiplier"] for p in PORTION_SIZES if p["id"] == portion), 1.0
+        iyan_mult = next(
+            (q["multiplier"] for q in IYAN_QUANTITIES if q["id"] == iyan_quantity), 1.0
+        )
+        protein_mult = next(
+            (q["multiplier"] for q in PROTEIN_QUANTITIES if q["id"] == protein_quantity), 1.0
         )
 
         # Check for combo discount
@@ -217,7 +252,7 @@ def create_order():
                 break
 
         item_price = (
-            (IYAN_BASE_PRICE + soup_price + protein_price) * portion_mult
+            ((IYAN_BASE_PRICE * iyan_mult) + soup_price + (protein_price * protein_mult))
             - combo_discount
         ) * quantity
 
@@ -225,7 +260,8 @@ def create_order():
             {
                 "soups": soup_ids,
                 "proteins": protein_ids,
-                "portion": portion,
+                "iyan_quantity": iyan_quantity,
+                "protein_quantity": protein_quantity,
                 "quantity": quantity,
                 "price": item_price,
             }
@@ -395,15 +431,81 @@ def _process_bot_message(message, cart, state):
             return {
                 "message": (
                     f"Got it, {detected_portion} portion! "
-                    "Would you like to add this to your order? Say 'yes' to confirm or 'add more' for another item."
+                    "Now, how much Iyan would you like? Say: half plate, full plate, or double plate."
                 ),
-                "state": "confirming",
+                "state": "choosing_iyan_quantity",
                 "cart": cart,
                 "action": {"type": "select_portion", "portion": detected_portion},
             }
         return {
             "message": "Please choose a portion size: Small, Medium, or Large.",
             "state": "choosing_portion",
+            "cart": cart,
+            "action": None,
+        }
+
+    if state == "choosing_iyan_quantity":
+        detected_iyan_qty = None
+        # Look for numbers 1, 2, 3 in the message
+        if any(word in message for word in ["1", "one", "wrap"]):
+            detected_iyan_qty = "1"
+        elif any(word in message for word in ["2", "two", "wraps"]):
+            detected_iyan_qty = "2"
+        elif any(word in message for word in ["3", "three", "large"]):
+            detected_iyan_qty = "3"
+        
+        if detected_iyan_qty:
+            qty_display = {
+                "1": "1 wrap",
+                "2": "2 wraps",
+                "3": "3 wraps"
+            }.get(detected_iyan_qty, detected_iyan_qty)
+            
+            return {
+                "message": (
+                    f"Perfect! {qty_display} of Iyan. "
+                    "How many protein pieces would you like? Say: 1, 2, or 3."
+                ),
+                "state": "choosing_protein_quantity",
+                "cart": cart,
+                "action": {"type": "select_iyan_quantity", "iyan_quantity": detected_iyan_qty},
+            }
+        return {
+            "message": "How many wraps of Iyan would you like? Say: 1, 2, or 3 wraps.",
+            "state": "choosing_iyan_quantity",
+            "cart": cart,
+            "action": None,
+        }
+
+    if state == "choosing_protein_quantity":
+        detected_protein_qty = None
+        # Look for numbers 1, 2, 3 in the message
+        if any(word in message for word in ["1", "one", "piece"]):
+            detected_protein_qty = "1"
+        elif any(word in message for word in ["2", "two", "pieces"]):
+            detected_protein_qty = "2"
+        elif any(word in message for word in ["3", "three", "plenty", "more"]):
+            detected_protein_qty = "3"
+        
+        if detected_protein_qty:
+            qty_display = {
+                "1": "1 piece",
+                "2": "2 pieces",
+                "3": "3 pieces"
+            }.get(detected_protein_qty, detected_protein_qty)
+            
+            return {
+                "message": (
+                    f"Excellent! {qty_display} of protein. "
+                    "Would you like to add this to your order? Say 'yes' to confirm or 'add more' for another item."
+                ),
+                "state": "confirming",
+                "cart": cart,
+                "action": {"type": "select_protein_quantity", "protein_quantity": detected_protein_qty},
+            }
+        return {
+            "message": "How many protein pieces would you like? Say: 1, 2, or 3 pieces.",
+            "state": "choosing_protein_quantity",
             "cart": cart,
             "action": None,
         }

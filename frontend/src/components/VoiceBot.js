@@ -12,8 +12,12 @@ export default function VoiceBot({ menu, onNavigate }) {
   const [pendingSoups, setPendingSoups] = useState([]);
   const [pendingProteins, setPendingProteins] = useState([]);
   const [pendingPortion, setPendingPortion] = useState("small");
+  const [pendingIyanQuantity, setPendingIyanQuantity] = useState("2");
+  const [pendingProteinQuantity, setPendingProteinQuantity] = useState("2");
+  const [lastSpokenText, setLastSpokenText] = useState("");
   const messagesEndRef = useRef(null);
   const recognitionRef = useRef(null);
+  const audioRef = useRef(null);
   const { dispatch } = useCart();
 
   const scrollToBottom = () => {
@@ -25,58 +29,90 @@ export default function VoiceBot({ menu, onNavigate }) {
   const speakText = useCallback(
     async (text) => {
       if (!ttsEnabled) return;
+
+      // Stop any currently playing audio
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+
       try {
         const audioUrl = await fetchTTSAudio(text);
         const audio = new Audio(audioUrl);
+        audioRef.current = audio;
         audio.play();
       } catch {
         // TTS not available, use browser speech synthesis as fallback
         if ("speechSynthesis" in window) {
+          window.speechSynthesis.cancel(); // Stop any ongoing speech
           const utterance = new SpeechSynthesisUtterance(text);
-          utterance.rate = 0.9;
-          utterance.pitch = 1.0;
+          utterance.rate = 1.0;
+          utterance.pitch = 1.2;
+          utterance.volume = 1.0;
           window.speechSynthesis.speak(utterance);
         }
       }
     },
-    [ttsEnabled]
+    [ttsEnabled],
   );
 
   const addBotMessage = useCallback(
     (text) => {
+      // Prevent duplicate TTS calls for the same text
+      if (lastSpokenText === text) return;
+
       setMessages((prev) => [...prev, { role: "bot", text, time: new Date() }]);
+      setLastSpokenText(text);
       speakText(text);
     },
-    [speakText]
+    [speakText, lastSpokenText],
   );
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     let cancelled = false;
-    // Initial greeting
-    getBotGreeting()
-      .then((data) => {
-        if (!cancelled) addBotMessage(data.message);
-      })
-      .catch(() => {
-        if (!cancelled)
-          addBotMessage(
-            "Welcome to Ilé Ìyán! I'm your voice ordering assistant. What would you like to order today?"
-          );
-      });
+    // Initial greeting - only show once on component mount
+    const greetingTimeout = setTimeout(() => {
+      getBotGreeting()
+        .then((data) => {
+          if (!cancelled && lastSpokenText !== data.message) {
+            addBotMessage(data.message);
+          }
+        })
+        .catch(() => {
+          if (!cancelled) {
+            const fallbackGreeting =
+              "Welcome to Ilé Ìyán! I'm your voice ordering assistant. What would you like to order today?";
+            if (lastSpokenText !== fallbackGreeting) {
+              addBotMessage(fallbackGreeting);
+            }
+          }
+        });
+    }, 100);
     return () => {
       cancelled = true;
+      clearTimeout(greetingTimeout);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSend = async (text) => {
     if (!text.trim()) return;
+
+    // Stop any currently playing TTS
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+
     const userMsg = text.trim();
     setMessages((prev) => [
       ...prev,
       { role: "user", text: userMsg, time: new Date() },
     ]);
-    setInput("");
+    setInput(""); // Clear input immediately
     setIsProcessing(true);
 
     try {
@@ -95,13 +131,24 @@ export default function VoiceBot({ menu, onNavigate }) {
           case "select_portion":
             setPendingPortion(response.action.portion);
             break;
+          case "select_iyan_quantity":
+            setPendingIyanQuantity(response.action.iyan_quantity);
+            break;
+          case "select_protein_quantity":
+            setPendingProteinQuantity(response.action.protein_quantity);
+            break;
           case "add_to_cart":
           case "place_order":
-            if (pendingSoups.length > 0 || response.action.type === "place_order") {
+            if (
+              pendingSoups.length > 0 ||
+              response.action.type === "place_order"
+            ) {
               const item = {
                 soups: pendingSoups,
                 proteins: pendingProteins,
                 portion: pendingPortion,
+                iyan_quantity: pendingIyanQuantity,
+                protein_quantity: pendingProteinQuantity,
                 quantity: 1,
               };
               if (pendingSoups.length > 0) {
@@ -113,6 +160,8 @@ export default function VoiceBot({ menu, onNavigate }) {
               setPendingSoups([]);
               setPendingProteins([]);
               setPendingPortion("small");
+              setPendingIyanQuantity("2");
+              setPendingProteinQuantity("2");
             }
             break;
           default:
@@ -122,15 +171,28 @@ export default function VoiceBot({ menu, onNavigate }) {
 
       addBotMessage(response.message);
     } catch {
-      addBotMessage("Sorry, I had trouble processing that. Could you try again?");
+      addBotMessage(
+        "Sorry, I had trouble processing that. Could you try again?",
+      );
     }
     setIsProcessing(false);
   };
 
   const startListening = () => {
-    if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
+    // Stop any currently playing TTS before listening
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+
+    if (
+      !("webkitSpeechRecognition" in window || "SpeechRecognition" in window)
+    ) {
       addBotMessage(
-        "Speech recognition is not supported in your browser. Please type your order instead."
+        "Speech recognition is not supported in your browser. Please type your order instead.",
       );
       return;
     }
@@ -139,17 +201,46 @@ export default function VoiceBot({ menu, onNavigate }) {
       window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
     recognition.continuous = false;
-    recognition.interimResults = false;
+    recognition.interimResults = true; // Show partial results as user speaks
     recognition.lang = "en-US";
 
     recognition.onstart = () => setIsListening(true);
-    recognition.onend = () => setIsListening(false);
-    recognition.onerror = () => setIsListening(false);
+    
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+    
+    recognition.onerror = (event) => {
+      console.error("Speech recognition error:", event.error);
+      setIsListening(false);
+    };
 
     recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      setInput(transcript);
-      handleSend(transcript);
+      let interimTranscript = "";
+      let finalTranscript = "";
+
+      // Collect interim and final results
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript + " ";
+        } else {
+          interimTranscript += transcript;
+        }
+      }
+
+      // Update input with interim or final result
+      const displayText = finalTranscript.trim() || interimTranscript.trim();
+      setInput(displayText);
+
+      // When speech recognition ends and we have a final transcript, send it
+      if (finalTranscript.trim() && event.results[event.results.length - 1].isFinal) {
+        // Small delay to allow UI update
+        setTimeout(() => {
+          handleSend(finalTranscript.trim());
+        }, 100);
+      }
     };
 
     recognitionRef.current = recognition;

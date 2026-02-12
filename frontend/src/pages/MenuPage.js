@@ -7,7 +7,8 @@ export default function MenuPage({ onNavigate }) {
   const [menu, setMenu] = useState(null);
   const [selectedSoups, setSelectedSoups] = useState([]);
   const [selectedProteins, setSelectedProteins] = useState([]);
-  const [portion, setPortion] = useState("small");
+  const [iyanQuantity, setIyanQuantity] = useState("2");
+  const [proteinQuantity, setProteinQuantity] = useState("2");
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,7 +22,9 @@ export default function MenuPage({ onNavigate }) {
         setLoading(false);
       })
       .catch((err) => {
-        setError("Could not load menu. Please make sure the backend is running.");
+        setError(
+          "Could not load menu. Please make sure the backend is running.",
+        );
         setLoading(false);
       });
   }, []);
@@ -30,7 +33,7 @@ export default function MenuPage({ onNavigate }) {
     setSelectedSoups((prev) =>
       prev.includes(soupId)
         ? prev.filter((id) => id !== soupId)
-        : [...prev, soupId]
+        : [...prev, soupId],
     );
   };
 
@@ -38,7 +41,7 @@ export default function MenuPage({ onNavigate }) {
     setSelectedProteins((prev) =>
       prev.includes(proteinId)
         ? prev.filter((id) => id !== proteinId)
-        : [...prev, proteinId]
+        : [...prev, proteinId],
     );
   };
 
@@ -50,8 +53,11 @@ export default function MenuPage({ onNavigate }) {
     const proteinPrice = menu.proteins
       .filter((p) => selectedProteins.includes(p.id))
       .reduce((sum, p) => sum + p.price, 0);
-    const portionMult =
-      menu.portions.find((p) => p.id === portion)?.multiplier || 1;
+    const iyanMult =
+      menu.iyan_quantities.find((q) => q.id === iyanQuantity)?.multiplier || 1;
+    const proteinMult =
+      menu.protein_quantities.find((q) => q.id === proteinQuantity)
+        ?.multiplier || 1;
 
     let comboDiscount = 0;
     for (const combo of menu.combos) {
@@ -65,7 +71,9 @@ export default function MenuPage({ onNavigate }) {
     }
 
     return (
-      ((menu.iyan_base_price + soupPrice + proteinPrice) * portionMult -
+      (menu.iyan_base_price * iyanMult +
+        soupPrice +
+        proteinPrice * proteinMult -
         comboDiscount) *
       quantity
     );
@@ -76,7 +84,7 @@ export default function MenuPage({ onNavigate }) {
     return menu.combos.find(
       (combo) =>
         combo.soups.length === selectedSoups.length &&
-        combo.soups.every((s) => selectedSoups.includes(s))
+        combo.soups.every((s) => selectedSoups.includes(s)),
     );
   };
 
@@ -87,13 +95,15 @@ export default function MenuPage({ onNavigate }) {
       payload: {
         soups: [...selectedSoups],
         proteins: [...selectedProteins],
-        portion,
+        iyan_quantity: iyanQuantity,
+        protein_quantity: proteinQuantity,
         quantity,
       },
     });
     setSelectedSoups([]);
     setSelectedProteins([]);
-    setPortion("small");
+    setIyanQuantity("2");
+    setProteinQuantity("2");
     setQuantity(1);
     setAddedFeedback(true);
     setTimeout(() => setAddedFeedback(false), 2000);
@@ -113,7 +123,10 @@ export default function MenuPage({ onNavigate }) {
       <div className="page-error">
         <span className="error-icon">⚠️</span>
         <p>{error}</p>
-        <button className="btn btn-primary" onClick={() => window.location.reload()}>
+        <button
+          className="btn btn-primary"
+          onClick={() => window.location.reload()}
+        >
           Retry
         </button>
       </div>
@@ -140,7 +153,9 @@ export default function MenuPage({ onNavigate }) {
         <h2>
           Choose Your Soup{selectedSoups.length > 0 ? "s" : ""}{" "}
           {selectedSoups.length > 0 && (
-            <span className="selection-count">({selectedSoups.length} selected)</span>
+            <span className="selection-count">
+              ({selectedSoups.length} selected)
+            </span>
           )}
         </h2>
         <div className="soups-grid">
@@ -183,26 +198,50 @@ export default function MenuPage({ onNavigate }) {
         </div>
       </section>
 
-      {/* Portion & Quantity */}
+      {/* Iyan Wraps & Protein Quantity */}
       <section className="menu-section options-row">
         <div className="option-group">
-          <h3>Portion Size</h3>
-          <div className="portion-btns">
-            {menu.portions.map((p) => (
-              <button
-                key={p.id}
-                className={`portion-btn ${portion === p.id ? "selected" : ""}`}
-                onClick={() => setPortion(p.id)}
-              >
-                {p.name}
-                {p.multiplier > 1 && (
-                  <span className="portion-mult">×{p.multiplier}</span>
-                )}
-              </button>
-            ))}
+          <h3>Amount of Wraps</h3>
+          <div className="quantity-btns">
+            {menu.iyan_quantities &&
+              menu.iyan_quantities.map((q) => (
+                <button
+                  key={q.id}
+                  className={`quantity-btn ${
+                    iyanQuantity === q.id ? "selected" : ""
+                  }`}
+                  onClick={() => setIyanQuantity(q.id)}
+                >
+                  {q.name}
+                </button>
+              ))}
           </div>
         </div>
         <div className="option-group">
+          <h3>Protein Pieces</h3>
+          <div className="quantity-btns">
+            {menu.protein_quantities &&
+              menu.protein_quantities.map((q) => (
+                <button
+                  key={q.id}
+                  className={`quantity-btn ${
+                    proteinQuantity === q.id ? "selected" : ""
+                  }`}
+                  onClick={() => setProteinQuantity(q.id)}
+                >
+                  {q.name}
+                  {proteinQuantity === q.id && (
+                    <span className="quantity-indicator"> ✓</span>
+                  )}
+                </button>
+              ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Item Quantity */}
+      <section className="menu-section">
+        <div className="option-group" style={{ margin: "0 auto" }}>
           <h3>Quantity</h3>
           <div className="quantity-control">
             <button
@@ -232,9 +271,7 @@ export default function MenuPage({ onNavigate }) {
             <span className="order-bar-items">
               Iyan +{" "}
               {selectedSoups
-                .map(
-                  (id) => menu.soups.find((s) => s.id === id)?.name
-                )
+                .map((id) => menu.soups.find((s) => s.id === id)?.name)
                 .join(" + ")}
             </span>
           )}
