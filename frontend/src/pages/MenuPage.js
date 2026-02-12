@@ -7,8 +7,8 @@ export default function MenuPage({ onNavigate }) {
   const [menu, setMenu] = useState(null);
   const [selectedSoups, setSelectedSoups] = useState([]);
   const [selectedProteins, setSelectedProteins] = useState([]);
+  const [proteinQuantities, setProteinQuantities] = useState({});
   const [iyanQuantity, setIyanQuantity] = useState("2");
-  const [proteinQuantity, setProteinQuantity] = useState("2");
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -38,11 +38,30 @@ export default function MenuPage({ onNavigate }) {
   };
 
   const toggleProtein = (proteinId) => {
-    setSelectedProteins((prev) =>
-      prev.includes(proteinId)
-        ? prev.filter((id) => id !== proteinId)
-        : [...prev, proteinId],
-    );
+    setSelectedProteins((prev) => {
+      if (prev.includes(proteinId)) {
+        const updated = prev.filter((id) => id !== proteinId);
+        setProteinQuantities((prevQty) => {
+          const newQty = { ...prevQty };
+          delete newQty[proteinId];
+          return newQty;
+        });
+        return updated;
+      } else {
+        setProteinQuantities((prevQty) => ({
+          ...prevQty,
+          [proteinId]: "1",
+        }));
+        return [...prev, proteinId];
+      }
+    });
+  };
+
+  const setProteinQuantity = (proteinId, quantity) => {
+    setProteinQuantities((prev) => ({
+      ...prev,
+      [proteinId]: quantity,
+    }));
   };
 
   const calculatePrice = () => {
@@ -52,12 +71,14 @@ export default function MenuPage({ onNavigate }) {
       .reduce((sum, s) => sum + s.price, 0);
     const proteinPrice = menu.proteins
       .filter((p) => selectedProteins.includes(p.id))
-      .reduce((sum, p) => sum + p.price, 0);
+      .reduce((sum, p) => {
+        const pQty = proteinQuantities[p.id] || "1";
+        const mult =
+          menu.protein_quantities.find((q) => q.id === pQty)?.multiplier || 1;
+        return sum + p.price * mult;
+      }, 0);
     const iyanMult =
       menu.iyan_quantities.find((q) => q.id === iyanQuantity)?.multiplier || 1;
-    const proteinMult =
-      menu.protein_quantities.find((q) => q.id === proteinQuantity)
-        ?.multiplier || 1;
 
     let comboDiscount = 0;
     for (const combo of menu.combos) {
@@ -73,7 +94,7 @@ export default function MenuPage({ onNavigate }) {
     return (
       (menu.iyan_base_price * iyanMult +
         soupPrice +
-        proteinPrice * proteinMult -
+        proteinPrice -
         comboDiscount) *
       quantity
     );
@@ -96,14 +117,14 @@ export default function MenuPage({ onNavigate }) {
         soups: [...selectedSoups],
         proteins: [...selectedProteins],
         iyan_quantity: iyanQuantity,
-        protein_quantity: proteinQuantity,
+        protein_quantities: { ...proteinQuantities },
         quantity,
       },
     });
     setSelectedSoups([]);
     setSelectedProteins([]);
+    setProteinQuantities({});
     setIyanQuantity("2");
-    setProteinQuantity("2");
     setQuantity(1);
     setAddedFeedback(true);
     setTimeout(() => setAddedFeedback(false), 2000);
@@ -177,31 +198,48 @@ export default function MenuPage({ onNavigate }) {
         </div>
       )}
 
-      {/* Protein Selection */}
+      {/* Protein Selection with Individual Quantities */}
       <section className="menu-section">
         <h2>Add Protein (Optional)</h2>
         <div className="protein-grid">
           {menu.proteins.map((protein) => (
-            <button
-              key={protein.id}
-              className={`protein-btn ${
-                selectedProteins.includes(protein.id) ? "selected" : ""
-              }`}
-              onClick={() => toggleProtein(protein.id)}
-            >
-              <span className="protein-name">{protein.name}</span>
-              <span className="protein-price">
-                +₦{protein.price.toLocaleString()}
-              </span>
-            </button>
+            <div key={protein.id} className="protein-with-qty">
+              <button
+                className={`protein-btn ${
+                  selectedProteins.includes(protein.id) ? "selected" : ""
+                }`}
+                onClick={() => toggleProtein(protein.id)}
+              >
+                <span className="protein-name">{protein.name}</span>
+                <span className="protein-price">
+                  +₦{protein.price.toLocaleString()}
+                </span>
+              </button>
+              {selectedProteins.includes(protein.id) && (
+                <div className="protein-qty-selector">
+                  {menu.protein_quantities &&
+                    menu.protein_quantities.map((q) => (
+                      <button
+                        key={q.id}
+                        className={`qty-mini-btn ${
+                          proteinQuantities[protein.id] === q.id ? "active" : ""
+                        }`}
+                        onClick={() => setProteinQuantity(protein.id, q.id)}
+                      >
+                        {q.name}
+                      </button>
+                    ))}
+                </div>
+              )}
+            </div>
           ))}
         </div>
       </section>
 
-      {/* Iyan Wraps & Protein Quantity */}
-      <section className="menu-section options-row">
+      {/* Iyan Wraps */}
+      <section className="menu-section">
         <div className="option-group">
-          <h3>Amount of Wraps</h3>
+          <h3>Wraps</h3>
           <div className="quantity-btns">
             {menu.iyan_quantities &&
               menu.iyan_quantities.map((q) => (
@@ -215,48 +253,6 @@ export default function MenuPage({ onNavigate }) {
                   {q.name}
                 </button>
               ))}
-          </div>
-        </div>
-        <div className="option-group">
-          <h3>Protein Pieces</h3>
-          <div className="quantity-btns">
-            {menu.protein_quantities &&
-              menu.protein_quantities.map((q) => (
-                <button
-                  key={q.id}
-                  className={`quantity-btn ${
-                    proteinQuantity === q.id ? "selected" : ""
-                  }`}
-                  onClick={() => setProteinQuantity(q.id)}
-                >
-                  {q.name}
-                  {proteinQuantity === q.id && (
-                    <span className="quantity-indicator"> ✓</span>
-                  )}
-                </button>
-              ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Item Quantity */}
-      <section className="menu-section">
-        <div className="option-group" style={{ margin: "0 auto" }}>
-          <h3>Quantity</h3>
-          <div className="quantity-control">
-            <button
-              onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              disabled={quantity <= 1}
-            >
-              −
-            </button>
-            <span>{quantity}</span>
-            <button
-              onClick={() => setQuantity(Math.min(20, quantity + 1))}
-              disabled={quantity >= 20}
-            >
-              +
-            </button>
           </div>
         </div>
       </section>

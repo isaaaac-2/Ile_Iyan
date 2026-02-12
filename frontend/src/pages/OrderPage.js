@@ -16,8 +16,7 @@ export default function OrderPage({ onNavigate }) {
       .catch(() => {});
   }, []);
 
-  const getSoupName = (id) =>
-    menu?.soups.find((s) => s.id === id)?.name || id;
+  const getSoupName = (id) => menu?.soups.find((s) => s.id === id)?.name || id;
   const getProteinName = (id) =>
     menu?.proteins.find((p) => p.id === id)?.name || id;
 
@@ -28,9 +27,15 @@ export default function OrderPage({ onNavigate }) {
       .reduce((sum, s) => sum + s.price, 0);
     const proteinPrice = menu.proteins
       .filter((p) => item.proteins.includes(p.id))
-      .reduce((sum, p) => sum + p.price, 0);
-    const portionMult =
-      menu.portions.find((p) => p.id === item.portion)?.multiplier || 1;
+      .reduce((sum, p) => {
+        const pQty = item.protein_quantities?.[p.id] || "1";
+        const mult =
+          menu.protein_quantities?.find((q) => q.id === pQty)?.multiplier || 1;
+        return sum + p.price * mult;
+      }, 0);
+    const iyanMult =
+      menu.iyan_quantities?.find((q) => q.id === item.iyan_quantity)
+        ?.multiplier || 1;
 
     let comboDiscount = 0;
     for (const combo of menu.combos) {
@@ -44,7 +49,9 @@ export default function OrderPage({ onNavigate }) {
     }
 
     return (
-      ((menu.iyan_base_price + soupPrice + proteinPrice) * portionMult -
+      (menu.iyan_base_price * iyanMult +
+        soupPrice +
+        proteinPrice -
         comboDiscount) *
       item.quantity
     );
@@ -52,7 +59,7 @@ export default function OrderPage({ onNavigate }) {
 
   const totalPrice = state.items.reduce(
     (sum, item) => sum + calculateItemPrice(item),
-    0
+    0,
   );
 
   const handleSubmitOrder = async () => {
@@ -84,8 +91,12 @@ export default function OrderPage({ onNavigate }) {
             <strong>#{orderResult.id}</strong>
           </div>
           <p>
-            Thank you{orderResult.customer_name !== "Guest" ? `, ${orderResult.customer_name}` : ""}!
-            Your order of ₦{orderResult.total.toLocaleString()} has been placed.
+            Thank you
+            {orderResult.customer_name !== "Guest"
+              ? `, ${orderResult.customer_name}`
+              : ""}
+            ! Your order of ₦{orderResult.total.toLocaleString()} has been
+            placed.
           </p>
           <div className="confirmation-items">
             {orderResult.items.map((item, i) => (
@@ -161,16 +172,26 @@ export default function OrderPage({ onNavigate }) {
               <div key={index} className="cart-item">
                 <div className="cart-item-info">
                   <h3>
-                    🍲 Iyan + {item.soups.map((id) => getSoupName(id)).join(" + ")}
+                    🍲 Iyan +{" "}
+                    {item.soups.map((id) => getSoupName(id)).join(" + ")}
                   </h3>
                   {item.proteins.length > 0 && (
                     <p className="cart-item-proteins">
-                      🥩 {item.proteins.map((id) => getProteinName(id)).join(", ")}
+                      🥩{" "}
+                      {item.proteins
+                        .map(
+                          (id) =>
+                            `${getProteinName(id)} (${item.protein_quantities?.[id] || "1"})`,
+                        )
+                        .join(", ")}
                     </p>
                   )}
                   <p className="cart-item-details">
-                    📏 {item.portion.charAt(0).toUpperCase() + item.portion.slice(1)} ×{" "}
-                    {item.quantity}
+                    🍖{" "}
+                    {menu?.iyan_quantities?.find(
+                      (q) => q.id === item.iyan_quantity,
+                    )?.name || "2 Wraps"}{" "}
+                    × {item.quantity}
                   </p>
                 </div>
                 <div className="cart-item-right">
@@ -200,7 +221,10 @@ export default function OrderPage({ onNavigate }) {
                 value={customerName}
                 onChange={(e) => {
                   setCustomerName(e.target.value);
-                  dispatch({ type: "SET_CUSTOMER_NAME", payload: e.target.value });
+                  dispatch({
+                    type: "SET_CUSTOMER_NAME",
+                    payload: e.target.value,
+                  });
                 }}
                 placeholder="Enter your name"
               />
@@ -218,7 +242,9 @@ export default function OrderPage({ onNavigate }) {
               onClick={handleSubmitOrder}
               disabled={submitting}
             >
-              {submitting ? "Placing Order..." : `Place Order — ₦${totalPrice.toLocaleString()}`}
+              {submitting
+                ? "Placing Order..."
+                : `Place Order — ₦${totalPrice.toLocaleString()}`}
             </button>
           </div>
         </>

@@ -19,7 +19,7 @@ export default function HomePage({ onNavigate }) {
         soups: combo.soups,
         proteins: [],
         iyan_quantity: "2",
-        protein_quantity: "2",
+        protein_quantities: {},
         quantity: 1,
       },
     });

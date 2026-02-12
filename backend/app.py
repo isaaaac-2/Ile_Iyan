@@ -359,12 +359,6 @@ def _process_bot_message(message, cart, state):
         if name_lower in message or id_lower in message:
             detected_proteins.append(protein["id"])
 
-    # Detect portion size
-    detected_portion = None
-    for portion in PORTION_SIZES:
-        if portion["id"] in message:
-            detected_portion = portion["id"]
-
     # State machine logic
     if state == "greeting" or any(
         w in message for w in ["menu", "what do you have", "options", "show me"]
@@ -411,10 +405,9 @@ def _process_bot_message(message, cart, state):
         if detected_proteins or "no protein" in message or "skip" in message or "none" in message:
             return {
                 "message": (
-                    "What portion size would you like? "
-                    "Small, Medium, or Large?"
+                    "Got it! How many protein pieces would you like? Say: 1, 2, or 3 pieces."
                 ),
-                "state": "choosing_portion",
+                "state": "choosing_protein_quantity",
                 "cart": cart,
                 "pending_proteins": detected_proteins,
                 "action": {"type": "select_proteins", "proteins": detected_proteins},
@@ -426,23 +419,7 @@ def _process_bot_message(message, cart, state):
             "action": None,
         }
 
-    if state == "choosing_portion":
-        if detected_portion:
-            return {
-                "message": (
-                    f"Got it, {detected_portion} portion! "
-                    "Now, how much Iyan would you like? Say: half plate, full plate, or double plate."
-                ),
-                "state": "choosing_iyan_quantity",
-                "cart": cart,
-                "action": {"type": "select_portion", "portion": detected_portion},
-            }
-        return {
-            "message": "Please choose a portion size: Small, Medium, or Large.",
-            "state": "choosing_portion",
-            "cart": cart,
-            "action": None,
-        }
+
 
     if state == "choosing_iyan_quantity":
         detected_iyan_qty = None
@@ -463,15 +440,15 @@ def _process_bot_message(message, cart, state):
             
             return {
                 "message": (
-                    f"Perfect! {qty_display} of Iyan. "
-                    "How many protein pieces would you like? Say: 1, 2, or 3."
+                    f"Excellent! {qty_display} of Iyan. "
+                    "Would you like to add this to your order? Say 'yes' to confirm or 'add more' for another item."
                 ),
-                "state": "choosing_protein_quantity",
+                "state": "confirming",
                 "cart": cart,
                 "action": {"type": "select_iyan_quantity", "iyan_quantity": detected_iyan_qty},
             }
         return {
-            "message": "How many wraps of Iyan would you like? Say: 1, 2, or 3 wraps.",
+            "message": "How much Iyan would you like? Say: 1 wrap, 2 wraps, or 3 wraps.",
             "state": "choosing_iyan_quantity",
             "cart": cart,
             "action": None,
@@ -486,20 +463,21 @@ def _process_bot_message(message, cart, state):
             detected_protein_qty = "2"
         elif any(word in message for word in ["3", "three", "plenty", "more"]):
             detected_protein_qty = "3"
+        elif any(word in message for word in ["no protein", "skip", "none"]):
+            detected_protein_qty = None  # No protein selected
         
-        if detected_protein_qty:
+        if detected_protein_qty or "no protein" in message or "skip" in message:
             qty_display = {
                 "1": "1 piece",
                 "2": "2 pieces",
                 "3": "3 pieces"
-            }.get(detected_protein_qty, detected_protein_qty)
+            }.get(detected_protein_qty, "no protein")
             
             return {
                 "message": (
-                    f"Excellent! {qty_display} of protein. "
-                    "Would you like to add this to your order? Say 'yes' to confirm or 'add more' for another item."
+                    f"Perfect! {qty_display}. Now, how much Iyan would you like? Say: 1 wrap, 2 wraps, or 3 wraps."
                 ),
-                "state": "confirming",
+                "state": "choosing_iyan_quantity",
                 "cart": cart,
                 "action": {"type": "select_protein_quantity", "protein_quantity": detected_protein_qty},
             }

@@ -11,9 +11,8 @@ export default function VoiceBot({ menu, onNavigate }) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [pendingSoups, setPendingSoups] = useState([]);
   const [pendingProteins, setPendingProteins] = useState([]);
-  const [pendingPortion, setPendingPortion] = useState("small");
+  const [pendingProteinQuantities, setPendingProteinQuantities] = useState({});
   const [pendingIyanQuantity, setPendingIyanQuantity] = useState("2");
-  const [pendingProteinQuantity, setPendingProteinQuantity] = useState("2");
   const [lastSpokenText, setLastSpokenText] = useState("");
   const messagesEndRef = useRef(null);
   const recognitionRef = useRef(null);
@@ -27,7 +26,7 @@ export default function VoiceBot({ menu, onNavigate }) {
   useEffect(scrollToBottom, [messages]);
 
   const speakText = useCallback(
-    async (text) => {
+    (text) => {
       if (!ttsEnabled) return;
 
       // Stop any currently playing audio
@@ -36,22 +35,34 @@ export default function VoiceBot({ menu, onNavigate }) {
         audioRef.current = null;
       }
 
-      try {
-        const audioUrl = await fetchTTSAudio(text);
-        const audio = new Audio(audioUrl);
-        audioRef.current = audio;
-        audio.play();
-      } catch {
-        // TTS not available, use browser speech synthesis as fallback
-        if ("speechSynthesis" in window) {
-          window.speechSynthesis.cancel(); // Stop any ongoing speech
-          const utterance = new SpeechSynthesisUtterance(text);
-          utterance.rate = 1.0;
-          utterance.pitch = 1.2;
-          utterance.volume = 1.0;
-          window.speechSynthesis.speak(utterance);
-        }
-      }
+      // Fetch and play TTS in the background without blocking
+      fetchTTSAudio(text)
+        .then((audioUrl) => {
+          const audio = new Audio(audioUrl);
+          audioRef.current = audio;
+          audio.play().catch(() => {
+            // Fallback to speech synthesis if audio play fails
+            if ("speechSynthesis" in window) {
+              window.speechSynthesis.cancel();
+              const utterance = new SpeechSynthesisUtterance(text);
+              utterance.rate = 1.0;
+              utterance.pitch = 1.2;
+              utterance.volume = 1.0;
+              window.speechSynthesis.speak(utterance);
+            }
+          });
+        })
+        .catch(() => {
+          // TTS not available, use browser speech synthesis as fallback
+          if ("speechSynthesis" in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1.0;
+            utterance.pitch = 1.2;
+            utterance.volume = 1.0;
+            window.speechSynthesis.speak(utterance);
+          }
+        });
     },
     [ttsEnabled],
   );
@@ -128,14 +139,16 @@ export default function VoiceBot({ menu, onNavigate }) {
           case "select_proteins":
             setPendingProteins(response.action.proteins || []);
             break;
-          case "select_portion":
-            setPendingPortion(response.action.portion);
-            break;
           case "select_iyan_quantity":
             setPendingIyanQuantity(response.action.iyan_quantity);
             break;
           case "select_protein_quantity":
-            setPendingProteinQuantity(response.action.protein_quantity);
+            if (response.action.protein_id && response.action.protein_quantity) {
+              setPendingProteinQuantities((prev) => ({
+                ...prev,
+                [response.action.protein_id]: response.action.protein_quantity,
+              }));
+            }
             break;
           case "add_to_cart":
           case "place_order":
@@ -146,9 +159,8 @@ export default function VoiceBot({ menu, onNavigate }) {
               const item = {
                 soups: pendingSoups,
                 proteins: pendingProteins,
-                portion: pendingPortion,
                 iyan_quantity: pendingIyanQuantity,
-                protein_quantity: pendingProteinQuantity,
+                protein_quantities: pendingProteinQuantities,
                 quantity: 1,
               };
               if (pendingSoups.length > 0) {
@@ -159,9 +171,8 @@ export default function VoiceBot({ menu, onNavigate }) {
               }
               setPendingSoups([]);
               setPendingProteins([]);
-              setPendingPortion("small");
+              setPendingProteinQuantities({});
               setPendingIyanQuantity("2");
-              setPendingProteinQuantity("2");
             }
             break;
           default:
