@@ -1,3 +1,5 @@
+// In production on Vercel, this will be empty and we use relative paths
+// In development, defaults to localhost:5000
 const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
 export async function fetchMenu() {
