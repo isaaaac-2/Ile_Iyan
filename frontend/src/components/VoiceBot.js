@@ -79,8 +79,8 @@ export default function VoiceBot({ menu, onNavigate }) {
     [speakText, lastSpokenText],
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     let cancelled = false;
     // Initial greeting - only show once on component mount
     const greetingTimeout = setTimeout(() => {
@@ -143,7 +143,10 @@ export default function VoiceBot({ menu, onNavigate }) {
             setPendingIyanQuantity(response.action.iyan_quantity);
             break;
           case "select_protein_quantity":
-            if (response.action.protein_id && response.action.protein_quantity) {
+            if (
+              response.action.protein_id &&
+              response.action.protein_quantity
+            ) {
               setPendingProteinQuantities((prev) => ({
                 ...prev,
                 [response.action.protein_id]: response.action.protein_quantity,
@@ -216,11 +219,11 @@ export default function VoiceBot({ menu, onNavigate }) {
     recognition.lang = "en-US";
 
     recognition.onstart = () => setIsListening(true);
-    
+
     recognition.onend = () => {
       setIsListening(false);
     };
-    
+
     recognition.onerror = (event) => {
       console.error("Speech recognition error:", event.error);
       setIsListening(false);
@@ -233,7 +236,7 @@ export default function VoiceBot({ menu, onNavigate }) {
       // Collect interim and final results
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const transcript = event.results[i][0].transcript;
-        
+
         if (event.results[i].isFinal) {
           finalTranscript += transcript + " ";
         } else {
@@ -246,7 +249,10 @@ export default function VoiceBot({ menu, onNavigate }) {
       setInput(displayText);
 
       // When speech recognition ends and we have a final transcript, send it
-      if (finalTranscript.trim() && event.results[event.results.length - 1].isFinal) {
+      if (
+        finalTranscript.trim() &&
+        event.results[event.results.length - 1].isFinal
+      ) {
         // Small delay to allow UI update
         setTimeout(() => {
           handleSend(finalTranscript.trim());
