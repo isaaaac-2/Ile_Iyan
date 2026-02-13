@@ -346,6 +346,61 @@ After Vercel redeploys:
 
 ---
 
+## FIX ATTEMPT 2: Improve Serverless Function Export & Add Test Endpoint
+
+**Date:** February 13, 2026, 18:15 UTC
+
+### Issue
+After FIX 1, the build was faster and the app loaded, but the menu still didn't load. This suggests:
+- The serverless function might not be properly exporting the Flask app
+- There could be a silent import error
+- We needed a way to test if the serverless function itself is working
+
+### Why This Works
+Vercel's Python runtime needs explicit Flask app export. By ensuring proper imports and adding a simple `/api/test` endpoint that doesn't depend on the backend, we can:
+1. Verify the serverless function is being called
+2. Diagnose import errors
+3. Provide a fallback endpoint for testing
+
+### Solution & Changes
+**File Modified:** `api/index.py`
+
+**Key Changes:**
+```python
+# Better organized imports
+from flask import Flask, jsonify
+
+# More verbose error handling
+try:
+    from app import app
+    print("[Vercel] ✅ Successfully imported Flask app from backend")
+except ImportError as e:
+    print(f"[Vercel] ❌ ERROR: Failed to import app: {e}")
+    # ... fallback app creation
+
+# NEW: Test endpoint (doesn't depend on backend app)
+@app.route('/api/test', methods=['GET'])
+def test():
+    return jsonify({
+        'status': 'ok',
+        'message': 'Serverless function is working!',
+        'environment': 'Vercel'
+    })
+```
+
+### Expected Outcome
+✅ Better error logging in Vercel Runtime Logs
+✅ New `/api/test` endpoint works without backend dependencies
+✅ Can diagnose if issue is with serverless function or backend import
+
+### How to Test
+1. After Vercel redeploys, visit: `https://ile-iyan.vercel.app/api/test`
+2. If you see the JSON response with `status: 'ok'`, serverless is working
+3. If you see an error, check Vercel Runtime Logs for the import error message
+4. Then we know if we need to fix the backend import or something else
+
+---
+
 ## UPCOMING: Further Fixes (If Needed)
 
 Will document here...
@@ -377,5 +432,5 @@ Ile_Iyan/
 
 ---
 
-**Last Updated:** February 13, 2026, 17:30 UTC
-**Status:** Ready for deployment to Vercel
+**Last Updated:** February 13, 2026, 18:15 UTC
+**Status:** FIX 2 deployed - Testing in progress
