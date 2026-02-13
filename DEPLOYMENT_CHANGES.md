@@ -401,6 +401,99 @@ def test():
 
 ---
 
+## FIX ATTEMPT 3: Use Explicit Builds & @vercel/python (CRITICAL FIX)
+
+**Date:** February 13, 2026, 22:20 UTC
+
+### Issue (CRITICAL)
+After FIX 2, **all `/api/*` requests still returned 404**. Testing revealed: **the Python serverless function was NOT being deployed at all**.
+
+**Diagnosis:**
+- Vercel logs showed 404 for `/api/test`, `/api/health`, and `/api/menu`
+- No Python runtime errors appeared (because the function wasn't even running)
+- The `functions` property and `buildCommand` approach wasn't working
+
+**Root Cause:**
+- `functions` property with `runtime: "python@3.9"` is NOT valid Vercel syntax
+- `buildCommand` alone doesn't deploy serverless functions
+- Need explicit `builds` with `@vercel/python` to tell Vercel to build the Python function
+
+### Why This ACTUALLY Works
+Vercel requires:
+1. **Explicit `builds` property** to specify which files are serverless functions
+2. **`@vercel/python` builder** (not custom runtime syntax) to compile Python
+3. **Proper `routes`** to map URLs to the built functions
+
+### Solution & Changes
+**File Modified:** `vercel.json`
+
+**Changed From:**
+```json
+{
+  "version": 2,
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/build",
+  "functions": {
+    "api/index.py": { "runtime": "python@3.9" }
+  }
+}
+```
+
+**Changed To:**
+```json
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python@3.8"
+    },
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "frontend/build" }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/build/$1"
+    }
+  ]
+}
+```
+
+**Key Changes:**
+- ✅ Removed invalid `functions` block
+- ✅ Added explicit `builds` for both Python API and React frontend
+- ✅ Used `@vercel/python@3.8` (official Vercel Python builder)
+- ✅ Used `@vercel/static-build` for React frontend
+- ✅ Proper `routes` configuration to connect them
+
+### Expected Outcome
+✅ Python serverless function WILL be deployed
+✅ `/api/test` returns JSON instead of 404
+✅ `/api/menu` works and menu loads
+✅ Frontend loads and communicates with backend
+
+### How to Verify
+After Vercel redeploys:
+1. Visit: `https://ile-iyan.vercel.app/api/test`
+   - **Expected:** `{"status": "ok", "message": "Serverless function is working!", ...}`
+   - **Not 404!**
+
+2. Visit main app: `https://ile-iyan.vercel.app/`
+   - **Expected:** Menu loads from `/api/menu`
+   - Other devices should see it too
+
+3. Check Vercel Logs again for NO 404s on `/api/*` routes
+
+---
+
 ## UPCOMING: Further Fixes (If Needed)
 
 Will document here...
@@ -432,5 +525,5 @@ Ile_Iyan/
 
 ---
 
-**Last Updated:** February 13, 2026, 18:15 UTC
-**Status:** FIX 2 deployed - Testing in progress
+**Last Updated:** February 13, 2026, 22:20 UTC
+**Status:** FIX 3 CRITICAL - Python serverless now being deployed
