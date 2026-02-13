@@ -494,6 +494,140 @@ After Vercel redeploys:
 
 ---
 
+## FIX ATTEMPT 4: Switch to Render Backend Hosting ✅ IMPLEMENTED
+
+### The Decision
+After 3 consecutive failed attempts to deploy a Python serverless function on Vercel (all resulting in 404 errors), we are abandoning the single-provider approach and adopting a proven architecture: **Vercel for frontend + Render for backend**.
+
+### The Problem
+- **Symptom:** All `/api/*` endpoints returned 404 even after 3 major configuration iterations
+- **Root Cause:** Vercel's Python serverless builder (`@vercel/python`) either isn't deploying the function or has issues routing requests
+- **Evidence:** Vercel runtime logs showed NO responses from Python endpoints; only static frontend assets loaded
+- **Impact:** Other devices cannot access the app because backend is unreachable
+
+### Why This Solution Works
+1. **Vercel (Frontend):** Already proven to work for static React apps
+2. **Render (Backend):** Specialized in hosting backend services with simple git-based deployment
+3. **Separation of Concerns:** Each service handles what it does best
+4. **Production-Ready:** Uses `gunicorn` WSGI server (industry standard for Python Flask)
+5. **Git-Based Deployment:** Render watches GitHub and auto-deploys on push (simple and reliable)
+
+### Solution Implemented
+
+**Files Created/Modified:**
+
+#### 1. `render.yaml` (NEW)
+```yaml
+services:
+  - type: web
+    name: ile-iyan-backend
+    runtime: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT backend.app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9
+```
+- Tells Render exactly how to build and run the Python backend
+- Uses `gunicorn` as production WSGI server
+- Sets Python 3.9 (matching `backend/app.py` requirements)
+
+#### 2. `backend/requirements.txt` (MODIFIED)
+- **Added:** `gunicorn>=21.0.0`
+- **Purpose:** Production WSGI server needed by Render
+
+#### 3. `frontend/.env.production` (MODIFIED)
+- **Changed:** `REACT_APP_API_URL=` → `REACT_APP_API_URL=https://ile-iyan-backend.onrender.com`
+- **Purpose:** Point React frontend to Render backend in production
+- **Note:** URL placeholder; update after actual Render deployment
+
+#### 4. Git Checkpoint Created
+- **Tag:** `checkpoint-before-render-switch`
+- **Purpose:** Can revert to this point if Render deployment fails
+
+### Deployment Steps (For User)
+
+1. **Commit and push changes** to GitHub:
+   ```bash
+   git add render.yaml backend/requirements.txt frontend/.env.production
+   git commit -m "MAJOR: Switch to Render for backend hosting"
+   git push origin main
+   ```
+
+2. **Create Render Web Service:**
+   - Go to [render.com](https://render.com)
+   - Sign up / Log in
+   - Click "New" → "Web Service"
+   - Connect GitHub (if not already)
+   - Select `isaaaac-2/Ile_Iyan` repository
+   - Choose `backend` as Root Directory
+   - Render auto-detects `render.yaml` → uses it
+   - Deploy
+
+3. **Wait for deployment** (~1-2 minutes)
+
+4. **Get Render service URL** from Render dashboard
+   - Will be something like: `https://ile-iyan-backend.onrender.com`
+
+5. **Update frontend/.env.production** if URL is different:
+   ```
+   REACT_APP_API_URL=https://<your-actual-service-name>.onrender.com
+   ```
+
+6. **Redeploy frontend** on Vercel:
+   ```bash
+   git add frontend/.env.production
+   git commit -m "Update API URL to Render backend"
+   git push origin main
+   ```
+   (Vercel auto-redeploys on push)
+
+7. **Test from other devices:**
+   - Visit: `https://ile-iyan.vercel.app/` (or your actual URL)
+   - Menu should load
+   - All API calls should work (no 404s)
+
+### Expected Outcome
+✅ Backend API accessible at: `https://ile-iyan-backend.onrender.com/api/menu`, `/api/order`, etc.
+✅ Frontend loads on: `https://ile-iyan.vercel.app/`
+✅ Cross-device access works (OTHER PEOPLE can load the app)
+✅ All menu/order/bot endpoints respond with correct data
+✅ **No more 404 errors**
+
+### How to Verify
+After both services are deployed:
+
+1. **Check backend directly:**
+   ```
+   https://ile-iyan-backend.onrender.com/api/menu
+   ```
+   Should return JSON list of soups (not 404)
+
+2. **Check frontend:**
+   ```
+   https://ile-iyan.vercel.app/
+   ```
+   Menu should load and display soups
+
+3. **Test from other device:**
+   - Share the Vercel URL with someone
+   - They should see the menu load (proving backend is accessible)
+
+### Why This Failure Cascade Happened
+1. Vercel Serverless Python is known to have integration issues
+2. The `@vercel/python` builder doesn't reliably detect/deploy Flask apps from non-root directories
+3. Forcing `vercel.json` routing rules doesn't solve the underlying deployment issue
+4. Render's approach is simpler: "here's my app.py, here's my requirements.txt, deploy it" — and it just works
+
+### Files Status
+- ✅ `render.yaml` — Created and ready
+- ✅ `backend/requirements.txt` — Updated with gunicorn
+- ✅ `frontend/.env.production` — Updated with Render URL
+- ✅ `api/` directory — Can be deleted (no longer needed) OR kept as backup
+- ✅ `vercel.json` — Can be deleted (no longer needed) OR kept as backup
+
+---
+
 ## UPCOMING: Further Fixes (If Needed)
 
 Will document here...
@@ -525,5 +659,5 @@ Ile_Iyan/
 
 ---
 
-**Last Updated:** February 13, 2026, 22:20 UTC
-**Status:** FIX 3 CRITICAL - Python serverless now being deployed
+**Last Updated:** February 14, 2026, 08:15 UTC
+**Status:** ✅ RENDER DEPLOYMENT CONFIGURED - Awaiting manual Render deployment by user
