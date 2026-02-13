@@ -21,5 +21,4 @@ except ImportError as e:
     def error():
         return {'error': 'Failed to load main app'}, 500
 
-# Export the Flask app for Vercel serverless
-# Vercel will automatically use this 'app' variable
+# The app is automatically used by Vercel's Python runtime
