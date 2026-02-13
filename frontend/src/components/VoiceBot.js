@@ -17,6 +17,7 @@ export default function VoiceBot({ menu, onNavigate }) {
   const messagesEndRef = useRef(null);
   const recognitionRef = useRef(null);
   const audioRef = useRef(null);
+  const initializationRef = useRef(false);
   const { dispatch } = useCart();
 
   const scrollToBottom = () => {
@@ -79,32 +80,30 @@ export default function VoiceBot({ menu, onNavigate }) {
     [speakText, lastSpokenText],
   );
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    let cancelled = false;
     // Initial greeting - only show once on component mount
+    if (initializationRef.current) return;
+    initializationRef.current = true;
+
     const greetingTimeout = setTimeout(() => {
       getBotGreeting()
         .then((data) => {
-          if (!cancelled && lastSpokenText !== data.message) {
-            addBotMessage(data.message);
-          }
+          setMessages((prev) => [...prev, { role: "bot", text: data.message, time: new Date() }]);
+          setLastSpokenText(data.message);
+          speakText(data.message);
         })
         .catch(() => {
-          if (!cancelled) {
-            const fallbackGreeting =
-              "Welcome to Ilé Ìyán! I'm your voice ordering assistant. What would you like to order today?";
-            if (lastSpokenText !== fallbackGreeting) {
-              addBotMessage(fallbackGreeting);
-            }
-          }
+          const fallbackGreeting =
+            "Welcome to Ilé Ìyán! I'm your voice ordering assistant. What would you like to order today?";
+          setMessages((prev) => [...prev, { role: "bot", text: fallbackGreeting, time: new Date() }]);
+          setLastSpokenText(fallbackGreeting);
+          speakText(fallbackGreeting);
         });
     }, 100);
     return () => {
-      cancelled = true;
       clearTimeout(greetingTimeout);
     };
-  }, []);
+  }, [speakText]);
 
   const handleSend = async (text) => {
     if (!text.trim()) return;
