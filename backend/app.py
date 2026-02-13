@@ -8,14 +8,7 @@ from gtts import gTTS
 import tempfile
 
 app = Flask(__name__)
-
-# Configure CORS to allow all origins (needed for Vercel deployment)
-cors_config = {
-    "origins": ["*"],
-    "methods": ["GET", "POST", "OPTIONS"],
-    "allow_headers": ["Content-Type"]
-}
-CORS(app, resources={r"/api/*": cors_config})
+CORS(app)
 
 # ─── Root Route ───────────────────────────────────────────────────────────────
 
