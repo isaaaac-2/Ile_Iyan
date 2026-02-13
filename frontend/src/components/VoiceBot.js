@@ -88,14 +88,20 @@ export default function VoiceBot({ menu, onNavigate }) {
     const greetingTimeout = setTimeout(() => {
       getBotGreeting()
         .then((data) => {
-          setMessages((prev) => [...prev, { role: "bot", text: data.message, time: new Date() }]);
+          setMessages((prev) => [
+            ...prev,
+            { role: "bot", text: data.message, time: new Date() },
+          ]);
           setLastSpokenText(data.message);
           speakText(data.message);
         })
         .catch(() => {
           const fallbackGreeting =
             "Welcome to Ilé Ìyán! I'm your voice ordering assistant. What would you like to order today?";
-          setMessages((prev) => [...prev, { role: "bot", text: fallbackGreeting, time: new Date() }]);
+          setMessages((prev) => [
+            ...prev,
+            { role: "bot", text: fallbackGreeting, time: new Date() },
+          ]);
           setLastSpokenText(fallbackGreeting);
           speakText(fallbackGreeting);
         });
