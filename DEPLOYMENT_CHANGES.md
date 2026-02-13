@@ -260,6 +260,32 @@ Vercel successfully builds without runtime format errors and auto-detects `/api/
 
 ---
 
+## CHECKPOINT: Before Vercel Serverless Fix Attempt
+
+**Date:** February 13, 2026, 17:45 UTC
+**Commit Hash:** 74337c5
+**Git Tag:** `checkpoint-before-vercel-fix`
+
+### Status at This Point
+- React frontend configured and building
+- Vercel configuration created but backend not working for other devices
+- Decision made to attempt fixing Vercel serverless instead of switching to separate hosting
+
+### How to Revert to This Point
+If the Vercel serverless fix doesn't work, revert using:
+```bash
+git reset --hard checkpoint-before-vercel-fix
+git push --force
+```
+
+---
+
+## UPCOMING: Vercel Serverless Fix Attempts
+
+Will document all attempts to fix the serverless backend deployment here.
+
+---
+
 ## Files Structure
 
 ```
