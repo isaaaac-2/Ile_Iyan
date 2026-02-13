@@ -17,6 +17,7 @@ export default function VoiceBot({ menu, onNavigate }) {
   const messagesEndRef = useRef(null);
   const recognitionRef = useRef(null);
   const audioRef = useRef(null);
+  const initializationRef = useRef(false);
   const { dispatch } = useCart();
 
   const scrollToBottom = () => {
@@ -80,31 +81,29 @@ export default function VoiceBot({ menu, onNavigate }) {
   );
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    let cancelled = false;
     // Initial greeting - only show once on component mount
+    if (initializationRef.current) return;
+    initializationRef.current = true;
+
     const greetingTimeout = setTimeout(() => {
       getBotGreeting()
         .then((data) => {
-          if (!cancelled && lastSpokenText !== data.message) {
-            addBotMessage(data.message);
-          }
+          setMessages((prev) => [...prev, { role: "bot", text: data.message, time: new Date() }]);
+          setLastSpokenText(data.message);
+          speakText(data.message);
         })
         .catch(() => {
-          if (!cancelled) {
-            const fallbackGreeting =
-              "Welcome to Ilé Ìyán! I'm your voice ordering assistant. What would you like to order today?";
-            if (lastSpokenText !== fallbackGreeting) {
-              addBotMessage(fallbackGreeting);
-            }
-          }
+          const fallbackGreeting =
+            "Welcome to Ilé Ìyán! I'm your voice ordering assistant. What would you like to order today?";
+          setMessages((prev) => [...prev, { role: "bot", text: fallbackGreeting, time: new Date() }]);
+          setLastSpokenText(fallbackGreeting);
+          speakText(fallbackGreeting);
         });
     }, 100);
     return () => {
-      cancelled = true;
       clearTimeout(greetingTimeout);
     };
-  }, []);
+  }, [speakText]);
 
   const handleSend = async (text) => {
     if (!text.trim()) return;
@@ -143,7 +142,10 @@ export default function VoiceBot({ menu, onNavigate }) {
             setPendingIyanQuantity(response.action.iyan_quantity);
             break;
           case "select_protein_quantity":
-            if (response.action.protein_id && response.action.protein_quantity) {
+            if (
+              response.action.protein_id &&
+              response.action.protein_quantity
+            ) {
               setPendingProteinQuantities((prev) => ({
                 ...prev,
                 [response.action.protein_id]: response.action.protein_quantity,
@@ -216,11 +218,11 @@ export default function VoiceBot({ menu, onNavigate }) {
     recognition.lang = "en-US";
 
     recognition.onstart = () => setIsListening(true);
-    
+
     recognition.onend = () => {
       setIsListening(false);
     };
-    
+
     recognition.onerror = (event) => {
       console.error("Speech recognition error:", event.error);
       setIsListening(false);
@@ -233,7 +235,7 @@ export default function VoiceBot({ menu, onNavigate }) {
       // Collect interim and final results
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const transcript = event.results[i][0].transcript;
-        
+
         if (event.results[i].isFinal) {
           finalTranscript += transcript + " ";
         } else {
@@ -246,7 +248,10 @@ export default function VoiceBot({ menu, onNavigate }) {
       setInput(displayText);
 
       // When speech recognition ends and we have a final transcript, send it
-      if (finalTranscript.trim() && event.results[event.results.length - 1].isFinal) {
+      if (
+        finalTranscript.trim() &&
+        event.results[event.results.length - 1].isFinal
+      ) {
         // Small delay to allow UI update
         setTimeout(() => {
           handleSend(finalTranscript.trim());
