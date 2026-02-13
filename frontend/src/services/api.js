@@ -1,8 +1,9 @@
 // In production: REACT_APP_API_URL will be empty, so we use relative paths
 // In development: defaults to localhost:5000
-const API_BASE = process.env.REACT_APP_API_URL === undefined 
-  ? "http://localhost:5000" 
-  : process.env.REACT_APP_API_URL;
+const API_BASE =
+  process.env.REACT_APP_API_URL === undefined
+    ? "http://localhost:5000"
+    : process.env.REACT_APP_API_URL;
 
 export async function fetchMenu() {
   const res = await fetch(`${API_BASE}/api/menu`);
