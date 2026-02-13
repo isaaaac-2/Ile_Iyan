@@ -267,12 +267,15 @@ Vercel successfully builds without runtime format errors and auto-detects `/api/
 **Git Tag:** `checkpoint-before-vercel-fix`
 
 ### Status at This Point
+
 - React frontend configured and building
 - Vercel configuration created but backend not working for other devices
 - Decision made to attempt fixing Vercel serverless instead of switching to separate hosting
 
 ### How to Revert to This Point
+
 If the Vercel serverless fix doesn't work, revert using:
+
 ```bash
 git reset --hard checkpoint-before-vercel-fix
 git push --force
@@ -283,6 +286,69 @@ git push --force
 ## UPCOMING: Vercel Serverless Fix Attempts
 
 Will document all attempts to fix the serverless backend deployment here.
+
+---
+
+## FIX ATTEMPT 1: Add Explicit Routes to vercel.json
+
+**Date:** February 13, 2026, 18:00 UTC
+
+### Issue
+
+The `/api/index.py` serverless function was defined in `vercel.json` but Vercel didn't know **how to route** requests to it. Without explicit `routes` configuration, Vercel was returning 404 for all `/api/*` calls.
+
+### Why This Works
+
+The `functions` property tells Vercel which files are serverless functions, but the `routes` property tells it **which URLs should go to which functions**. Without `routes`, there was no mapping between `/api/menu` and the Python function.
+
+### Solution & Changes
+
+**File Modified:** `vercel.json`
+
+**Added:**
+
+```json
+"routes": [
+  {
+    "src": "/api/(.*)",
+    "dest": "api/index.py"
+  },
+  {
+    "src": "/(.*)",
+    "dest": "frontend/build/$1"
+  },
+  {
+    "src": "/(.+)",
+    "dest": "frontend/build/index.html"
+  }
+]
+```
+
+**What Each Route Does:**
+
+1. `/api/(.*)` → Routes all API calls to the Python serverless function
+2. `/(.*)` → Serves static files from the React build
+3. `/(.+)` → Falls back to `index.html` for React client-side routing
+
+### Expected Outcome
+
+✅ Requests to `https://ile-iyan.vercel.app/api/menu` are now routed to the serverless function
+✅ Frontend static files are served correctly
+✅ React routing (SPA) works through index.html fallback
+
+### How to Test
+
+After Vercel redeploys:
+
+- From any device, visit: `https://ile-iyan.vercel.app/api/health`
+- Should return JSON (either the greeting or error message)
+- Main app should load menu correctly
+
+---
+
+## UPCOMING: Further Fixes (If Needed)
+
+Will document here...
 
 ---
 
