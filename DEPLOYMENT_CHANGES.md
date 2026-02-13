@@ -351,21 +351,27 @@ After Vercel redeploys:
 **Date:** February 13, 2026, 18:15 UTC
 
 ### Issue
+
 After FIX 1, the build was faster and the app loaded, but the menu still didn't load. This suggests:
+
 - The serverless function might not be properly exporting the Flask app
 - There could be a silent import error
 - We needed a way to test if the serverless function itself is working
 
 ### Why This Works
+
 Vercel's Python runtime needs explicit Flask app export. By ensuring proper imports and adding a simple `/api/test` endpoint that doesn't depend on the backend, we can:
+
 1. Verify the serverless function is being called
 2. Diagnose import errors
 3. Provide a fallback endpoint for testing
 
 ### Solution & Changes
+
 **File Modified:** `api/index.py`
 
 **Key Changes:**
+
 ```python
 # Better organized imports
 from flask import Flask, jsonify
@@ -389,11 +395,13 @@ def test():
 ```
 
 ### Expected Outcome
+
 ✅ Better error logging in Vercel Runtime Logs
 ✅ New `/api/test` endpoint works without backend dependencies
 ✅ Can diagnose if issue is with serverless function or backend import
 
 ### How to Test
+
 1. After Vercel redeploys, visit: `https://ile-iyan.vercel.app/api/test`
 2. If you see the JSON response with `status: 'ok'`, serverless is working
 3. If you see an error, check Vercel Runtime Logs for the import error message
@@ -406,28 +414,35 @@ def test():
 **Date:** February 13, 2026, 22:20 UTC
 
 ### Issue (CRITICAL)
+
 After FIX 2, **all `/api/*` requests still returned 404**. Testing revealed: **the Python serverless function was NOT being deployed at all**.
 
 **Diagnosis:**
+
 - Vercel logs showed 404 for `/api/test`, `/api/health`, and `/api/menu`
 - No Python runtime errors appeared (because the function wasn't even running)
 - The `functions` property and `buildCommand` approach wasn't working
 
 **Root Cause:**
+
 - `functions` property with `runtime: "python@3.9"` is NOT valid Vercel syntax
 - `buildCommand` alone doesn't deploy serverless functions
 - Need explicit `builds` with `@vercel/python` to tell Vercel to build the Python function
 
 ### Why This ACTUALLY Works
+
 Vercel requires:
+
 1. **Explicit `builds` property** to specify which files are serverless functions
 2. **`@vercel/python` builder** (not custom runtime syntax) to compile Python
 3. **Proper `routes`** to map URLs to the built functions
 
 ### Solution & Changes
+
 **File Modified:** `vercel.json`
 
 **Changed From:**
+
 ```json
 {
   "version": 2,
@@ -440,6 +455,7 @@ Vercel requires:
 ```
 
 **Changed To:**
+
 ```json
 {
   "version": 2,
@@ -468,6 +484,7 @@ Vercel requires:
 ```
 
 **Key Changes:**
+
 - ✅ Removed invalid `functions` block
 - ✅ Added explicit `builds` for both Python API and React frontend
 - ✅ Used `@vercel/python@3.8` (official Vercel Python builder)
@@ -475,13 +492,16 @@ Vercel requires:
 - ✅ Proper `routes` configuration to connect them
 
 ### Expected Outcome
+
 ✅ Python serverless function WILL be deployed
 ✅ `/api/test` returns JSON instead of 404
 ✅ `/api/menu` works and menu loads
 ✅ Frontend loads and communicates with backend
 
 ### How to Verify
+
 After Vercel redeploys:
+
 1. Visit: `https://ile-iyan.vercel.app/api/test`
    - **Expected:** `{"status": "ok", "message": "Serverless function is working!", ...}`
    - **Not 404!**
@@ -497,15 +517,18 @@ After Vercel redeploys:
 ## FIX ATTEMPT 4: Switch to Render Backend Hosting ✅ IMPLEMENTED
 
 ### The Decision
+
 After 3 consecutive failed attempts to deploy a Python serverless function on Vercel (all resulting in 404 errors), we are abandoning the single-provider approach and adopting a proven architecture: **Vercel for frontend + Render for backend**.
 
 ### The Problem
+
 - **Symptom:** All `/api/*` endpoints returned 404 even after 3 major configuration iterations
 - **Root Cause:** Vercel's Python serverless builder (`@vercel/python`) either isn't deploying the function or has issues routing requests
 - **Evidence:** Vercel runtime logs showed NO responses from Python endpoints; only static frontend assets loaded
 - **Impact:** Other devices cannot access the app because backend is unreachable
 
 ### Why This Solution Works
+
 1. **Vercel (Frontend):** Already proven to work for static React apps
 2. **Render (Backend):** Specialized in hosting backend services with simple git-based deployment
 3. **Separation of Concerns:** Each service handles what it does best
@@ -517,6 +540,7 @@ After 3 consecutive failed attempts to deploy a Python serverless function on Ve
 **Files Created/Modified:**
 
 #### 1. `render.yaml` (NEW)
+
 ```yaml
 services:
   - type: web
@@ -528,26 +552,31 @@ services:
       - key: PYTHON_VERSION
         value: 3.9
 ```
+
 - Tells Render exactly how to build and run the Python backend
 - Uses `gunicorn` as production WSGI server
 - Sets Python 3.9 (matching `backend/app.py` requirements)
 
 #### 2. `backend/requirements.txt` (MODIFIED)
+
 - **Added:** `gunicorn>=21.0.0`
 - **Purpose:** Production WSGI server needed by Render
 
 #### 3. `frontend/.env.production` (MODIFIED)
+
 - **Changed:** `REACT_APP_API_URL=` → `REACT_APP_API_URL=https://ile-iyan-backend.onrender.com`
 - **Purpose:** Point React frontend to Render backend in production
 - **Note:** URL placeholder; update after actual Render deployment
 
 #### 4. Git Checkpoint Created
+
 - **Tag:** `checkpoint-before-render-switch`
 - **Purpose:** Can revert to this point if Render deployment fails
 
 ### Deployment Steps (For User)
 
 1. **Commit and push changes** to GitHub:
+
    ```bash
    git add render.yaml backend/requirements.txt frontend/.env.production
    git commit -m "MAJOR: Switch to Render for backend hosting"
@@ -570,16 +599,19 @@ services:
    - Will be something like: `https://ile-iyan-backend.onrender.com`
 
 5. **Update frontend/.env.production** if URL is different:
+
    ```
    REACT_APP_API_URL=https://<your-actual-service-name>.onrender.com
    ```
 
 6. **Redeploy frontend** on Vercel:
+
    ```bash
    git add frontend/.env.production
    git commit -m "Update API URL to Render backend"
    git push origin main
    ```
+
    (Vercel auto-redeploys on push)
 
 7. **Test from other devices:**
@@ -588,6 +620,7 @@ services:
    - All API calls should work (no 404s)
 
 ### Expected Outcome
+
 ✅ Backend API accessible at: `https://ile-iyan-backend.onrender.com/api/menu`, `/api/order`, etc.
 ✅ Frontend loads on: `https://ile-iyan.vercel.app/`
 ✅ Cross-device access works (OTHER PEOPLE can load the app)
@@ -595,18 +628,23 @@ services:
 ✅ **No more 404 errors**
 
 ### How to Verify
+
 After both services are deployed:
 
 1. **Check backend directly:**
+
    ```
    https://ile-iyan-backend.onrender.com/api/menu
    ```
+
    Should return JSON list of soups (not 404)
 
 2. **Check frontend:**
+
    ```
    https://ile-iyan.vercel.app/
    ```
+
    Menu should load and display soups
 
 3. **Test from other device:**
@@ -614,12 +652,14 @@ After both services are deployed:
    - They should see the menu load (proving backend is accessible)
 
 ### Why This Failure Cascade Happened
+
 1. Vercel Serverless Python is known to have integration issues
 2. The `@vercel/python` builder doesn't reliably detect/deploy Flask apps from non-root directories
 3. Forcing `vercel.json` routing rules doesn't solve the underlying deployment issue
 4. Render's approach is simpler: "here's my app.py, here's my requirements.txt, deploy it" — and it just works
 
 ### Files Status
+
 - ✅ `render.yaml` — Created and ready
 - ✅ `backend/requirements.txt` — Updated with gunicorn
 - ✅ `frontend/.env.production` — Updated with Render URL
