@@ -8,14 +8,7 @@ from gtts import gTTS
 import tempfile
 
 app = Flask(__name__)
-
-# Configure CORS to allow all origins (needed for Vercel deployment)
-cors_config = {
-    "origins": ["*"],
-    "methods": ["GET", "POST", "OPTIONS"],
-    "allow_headers": ["Content-Type"]
-}
-CORS(app, resources={r"/api/*": cors_config})
+CORS(app)
 
 # ─── Root Route ───────────────────────────────────────────────────────────────
 
@@ -548,4 +541,5 @@ def health_check():
 
 
 if __name__ == "__main__":
-    app.run(debug=os.environ.get("FLASK_DEBUG", "false").lower() == "true", port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=os.environ.get("FLASK_DEBUG", "false").lower() == "true", host="0.0.0.0", port=port)
