@@ -47,6 +47,7 @@ function OrderTrackingPage({ onNavigate }) {
       return;
     }
     loadOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
   const loadOrders = async () => {

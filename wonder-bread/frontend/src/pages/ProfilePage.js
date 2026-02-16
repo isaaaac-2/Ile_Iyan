@@ -9,7 +9,7 @@ import { getProfile, updateProfile, getOrders } from '../services/api';
 import './ProfilePage.css';
 
 function ProfilePage({ onNavigate }) {
-  const { user, logout, isAuthenticated } = useAuth();
+  const { logout, isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
   const [profile, setProfile] = useState(null);
   const [orders, setOrders] = useState([]);
@@ -28,6 +28,7 @@ function ProfilePage({ onNavigate }) {
     }
     loadProfile();
     loadOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
   const loadProfile = async () => {

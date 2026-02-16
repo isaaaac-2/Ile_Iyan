@@ -10,7 +10,7 @@ import './OrderPage.css';
 
 function OrderPage({ onNavigate }) {
   const { cartItems, removeFromCart, updateQuantity, clearCart, getCartTotal } = useCart();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -50,7 +50,7 @@ function OrderPage({ onNavigate }) {
         delivery_address_id: null // Will be set in future version
       };
 
-      const response = await createOrder(orderData);
+      await createOrder(orderData);
       clearCart();
       alert('Order placed successfully!');
       onNavigate('tracking');

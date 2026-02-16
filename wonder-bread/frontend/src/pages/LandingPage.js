@@ -32,7 +32,7 @@ const LandingPage = () => {
     {
       name: 'Tunde Adeyemi',
       rating: 5,
-      text: 'Ordered once and now I'm a regular customer. Fresh bread every time!',
+      text: "Ordered once and now I'm a regular customer. Fresh bread every time!",
     },
   ];
 
