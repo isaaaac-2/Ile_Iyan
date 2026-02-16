@@ -37,12 +37,12 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = (product, quantity = 1) => {
     setCart((prevCart) => {
-      const existingItem = prevCart.find((item) => item.product_id === product.id);
+      const existingItem = prevCart.find((item) => item.id === product.id);
       
       if (existingItem) {
         // Update quantity if item already exists
         return prevCart.map((item) =>
-          item.product_id === product.id
+          item.id === product.id
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
@@ -51,9 +51,11 @@ export const CartProvider = ({ children }) => {
         return [
           ...prevCart,
           {
-            product_id: product.id,
+            id: product.id,
             name: product.name,
             price: product.price,
+            weight: product.weight,
+            image: product.image,
             quantity,
           },
         ];

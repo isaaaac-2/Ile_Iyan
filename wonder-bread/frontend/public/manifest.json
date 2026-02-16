@@ -1,6 +1,6 @@
 {
-  "short_name": "Ilé Ìyán",
-  "name": "Ilé Ìyán — The Home of Pounded Yam",
+  "short_name": "Wonder Bread",
+  "name": "Wonder Bread — Quality Bread, Prices That Make Sense",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +20,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#D4A373",
+  "background_color": "#FFF9F0"
 }

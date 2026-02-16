@@ -11,8 +11,8 @@ import tempfile
 # Add backend directory to path
 sys.path.insert(0, os.path.dirname(__file__))
 
-from wonder_bread_app import app, init_db_if_needed
-from init_wonder_bread_db import init_database
+from app import app, init_db_if_needed
+from init_db import init_database
 
 
 class WonderBreadAPITestCase(unittest.TestCase):

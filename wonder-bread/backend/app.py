@@ -95,7 +95,7 @@ def get_db():
 def init_db_if_needed():
     """Initialize database if it doesn't exist."""
     if not os.path.exists(DB_PATH):
-        from init_wonder_bread_db import init_database
+        from init_db import init_database
         init_database(DB_PATH)
 
 # ─── Root Route ───────────────────────────────────────────────────────────────
