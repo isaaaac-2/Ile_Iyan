@@ -33,5 +33,5 @@ htmlcov/
 .pytest_cache/
 
 # Wonder Bread Database
-backend/wonder_bread.db
-backend/test_wonder_bread.db
+wonder-bread/backend/wonder_bread.db
+wonder-bread/backend/test_wonder_bread.db
