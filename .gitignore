@@ -31,3 +31,7 @@ Thumbs.db
 .coverage
 htmlcov/
 .pytest_cache/
+
+# Wonder Bread Database
+backend/wonder_bread.db
+backend/test_wonder_bread.db
