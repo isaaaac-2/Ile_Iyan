@@ -9,7 +9,7 @@ import { getProfile, updateProfile, getOrders } from '../services/api';
 import './ProfilePage.css';
 
 function ProfilePage({ onNavigate }) {
-  const { logout, isAuthenticated } = useAuth();
+  const { logout, isAuthenticated, loading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
   const [profile, setProfile] = useState(null);
   const [orders, setOrders] = useState([]);
@@ -22,6 +22,9 @@ function ProfilePage({ onNavigate }) {
   });
 
   useEffect(() => {
+    // Wait for auth to finish loading before checking authentication
+    if (authLoading) return;
+    
     if (!isAuthenticated) {
       onNavigate('login');
       return;
@@ -29,7 +32,7 @@ function ProfilePage({ onNavigate }) {
     loadProfile();
     loadOrders();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated]);
+  }, [isAuthenticated, authLoading]);
 
   const loadProfile = async () => {
     try {
@@ -225,7 +228,7 @@ function ProfilePage({ onNavigate }) {
                         </div>
                       </div>
                       <div className="order-items">
-                        {JSON.parse(order.items).map((item, idx) => (
+                        {(typeof order.items === 'string' ? JSON.parse(order.items) : order.items).map((item, idx) => (
                           <div key={idx} className="order-item-detail">
                             <span>{item.name} x{item.quantity}</span>
                             <span>₦{(item.price * item.quantity).toLocaleString()}</span>

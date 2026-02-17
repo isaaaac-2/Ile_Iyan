@@ -36,19 +36,22 @@ function OrderStatusTracker({ status }) {
 }
 
 function OrderTrackingPage({ onNavigate }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Wait for auth to finish loading before checking authentication
+    if (authLoading) return;
+    
     if (!isAuthenticated) {
       onNavigate('login');
       return;
     }
     loadOrders();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated]);
+  }, [isAuthenticated, authLoading]);
 
   const loadOrders = async () => {
     try {
@@ -128,7 +131,7 @@ function OrderTrackingPage({ onNavigate }) {
             <div className="order-items-card">
               <h3>Order Items</h3>
               <div className="items-list">
-                {JSON.parse(selectedOrder.items).map((item, idx) => (
+                {(typeof selectedOrder.items === 'string' ? JSON.parse(selectedOrder.items) : selectedOrder.items).map((item, idx) => (
                   <div key={idx} className="tracking-item">
                     <div className="item-info">
                       <span className="item-name">{item.name}</span>

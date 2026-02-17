@@ -241,7 +241,7 @@ FLASK_ENV=production
 
 **Frontend (.env):**
 ```
-REACT_APP_API_URL=https://your-api-domain.com/api
+REACT_APP_WONDER_BREAD_API_URL=https://your-api-domain.com/api
 ```
 
 ## 📊 Product Catalog

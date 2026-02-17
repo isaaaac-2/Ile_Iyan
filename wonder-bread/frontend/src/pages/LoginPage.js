@@ -9,7 +9,6 @@ import './AuthPages.css';
 function LoginPage({ onNavigate }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
@@ -20,7 +19,7 @@ function LoginPage({ onNavigate }) {
     setLoading(true);
     
     try {
-      await login(email, password, rememberMe);
+      await login(email, password);
       onNavigate('profile');
     } catch (err) {
       setError(err.message || 'Invalid email or password');
@@ -68,14 +67,6 @@ function LoginPage({ onNavigate }) {
             </div>
             
             <div className="form-options">
-              <label className="checkbox-label">
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                />
-                <span>Remember me</span>
-              </label>
               <button type="button" className="link-button" onClick={() => alert('Password reset feature coming soon!')}>
                 Forgot password?
               </button>
