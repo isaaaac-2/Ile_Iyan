@@ -3,10 +3,12 @@
  */
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './AuthPages.css';
 
-function LoginPage({ onNavigate }) {
+function LoginPage() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -20,7 +22,7 @@ function LoginPage({ onNavigate }) {
     
     try {
       await login(email, password);
-      onNavigate('profile');
+      navigate('/wonder-bread/profile');
     } catch (err) {
       setError(err.message || 'Invalid email or password');
     }
@@ -80,7 +82,7 @@ function LoginPage({ onNavigate }) {
           <div className="auth-footer">
             <p>
               Don't have an account?{' '}
-              <button className="link-button" onClick={() => onNavigate('signup')}>
+              <button className="link-button" onClick={() => navigate('/wonder-bread/signup')}>
                 Sign Up
               </button>
             </p>

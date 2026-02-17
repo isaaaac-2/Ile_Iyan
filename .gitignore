@@ -34,14 +34,10 @@ Thumbs.db
 htmlcov/
 .pytest_cache/
 
-<<<<<<< HEAD
 # Databases
 *.db
 wonder_bread.db
 test_wonder_bread.db
 */backend/*.db
-=======
-# Wonder Bread Database
 wonder-bread/backend/wonder_bread.db
 wonder-bread/backend/test_wonder_bread.db
->>>>>>> fd967ad682378ad1cd2a6f7127b960020e143ef3

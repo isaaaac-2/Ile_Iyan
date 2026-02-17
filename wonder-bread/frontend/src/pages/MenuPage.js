@@ -3,11 +3,15 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { getMenu } from '../services/api';
 import './MenuPage.css';
 
-function MenuPage({ onNavigate }) {
+function MenuPage() {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -31,6 +35,15 @@ function MenuPage({ onNavigate }) {
   const handleAddToCart = (product) => {
     addToCart({ ...product, quantity: 1 });
     alert(`${product.name} added to cart!`);
+  };
+
+  const handleViewCart = () => {
+    if (!isAuthenticated) {
+      alert('Please login to view your cart');
+      navigate('/wonder-bread/login');
+      return;
+    }
+    navigate('/wonder-bread/orders');
   };
 
   if (loading) {
@@ -98,7 +111,7 @@ function MenuPage({ onNavigate }) {
       </div>
 
       <div className="menu-footer">
-        <button className="btn btn-secondary" onClick={() => onNavigate('order')}>
+        <button className="btn btn-secondary" onClick={handleViewCart}>
           View Cart & Checkout
         </button>
       </div>

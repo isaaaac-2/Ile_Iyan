@@ -3,18 +3,29 @@
  */
 
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import './Navbar.css';
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
   const { getItemCount } = useCart();
   const location = useLocation();
 
   const handleLogout = async () => {
     await logout();
+  };
+
+  const handleCartClick = (e) => {
+    if (!isAuthenticated) {
+      e.preventDefault();
+      alert('Please login to view your cart');
+      navigate('/wonder-bread/login');
+      return;
+    }
+    navigate('/wonder-bread/orders');
   };
 
   const isActive = (path) => {
@@ -50,12 +61,12 @@ const Navbar = () => {
         </div>
 
         <div className="wb-navbar-actions">
-          <Link to="/wonder-bread/cart" className="wb-cart-link">
+          <button onClick={handleCartClick} className="wb-cart-link" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
             🛒
             {getItemCount() > 0 && (
               <span className="wb-cart-badge">{getItemCount()}</span>
             )}
-          </Link>
+          </button>
 
           {isAuthenticated ? (
             <div className="wb-user-menu">

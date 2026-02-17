@@ -3,7 +3,8 @@
  * Routes and application structure for Wonder Bread bakery
  */
 
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import LandingPage from './pages/LandingPage';
@@ -18,46 +19,28 @@ import { CartProvider } from './context/CartContext';
 import './WonderBreadApp.css';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('landing');
-
-  const navigate = (page) => {
-    setCurrentPage(page);
-    window.scrollTo(0, 0);
-  };
-
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'landing':
-        return <LandingPage onNavigate={navigate} />;
-      case 'login':
-        return <LoginPage onNavigate={navigate} />;
-      case 'signup':
-        return <SignupPage onNavigate={navigate} />;
-      case 'menu':
-        return <MenuPage onNavigate={navigate} />;
-      case 'order':
-        return <OrderPage onNavigate={navigate} />;
-      case 'profile':
-        return <ProfilePage onNavigate={navigate} />;
-      case 'tracking':
-        return <OrderTrackingPage onNavigate={navigate} />;
-      default:
-        return <LandingPage onNavigate={navigate} />;
-    }
-  };
-
   return (
-    <AuthProvider>
-      <CartProvider>
-        <div className="wonder-bread-app">
-          <Navbar currentPage={currentPage} onNavigate={navigate} />
-          <main className="main-content">
-            {renderPage()}
-          </main>
-          <Footer onNavigate={navigate} />
-        </div>
-      </CartProvider>
-    </AuthProvider>
+    <BrowserRouter>
+      <AuthProvider>
+        <CartProvider>
+          <div className="wonder-bread-app">
+            <Navbar />
+            <main className="main-content">
+              <Routes>
+                <Route path="/wonder-bread" element={<LandingPage />} />
+                <Route path="/wonder-bread/login" element={<LoginPage />} />
+                <Route path="/wonder-bread/signup" element={<SignupPage />} />
+                <Route path="/wonder-bread/menu" element={<MenuPage />} />
+                <Route path="/wonder-bread/orders" element={<OrderPage />} />
+                <Route path="/wonder-bread/profile" element={<ProfilePage />} />
+                <Route path="/wonder-bread/tracking" element={<OrderTrackingPage />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
+        </CartProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 

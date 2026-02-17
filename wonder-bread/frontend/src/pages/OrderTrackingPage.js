@@ -3,6 +3,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getOrders } from '../services/api';
 import './OrderTrackingPage.css';
@@ -35,7 +36,8 @@ function OrderStatusTracker({ status }) {
   );
 }
 
-function OrderTrackingPage({ onNavigate }) {
+function OrderTrackingPage() {
+  const navigate = useNavigate();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -46,7 +48,7 @@ function OrderTrackingPage({ onNavigate }) {
     if (authLoading) return;
     
     if (!isAuthenticated) {
-      onNavigate('login');
+      navigate('/wonder-bread/login');
       return;
     }
     loadOrders();
@@ -85,7 +87,7 @@ function OrderTrackingPage({ onNavigate }) {
           <div className="no-orders-icon">📦</div>
           <h2>No Active Orders</h2>
           <p>You don't have any orders in progress.</p>
-          <button className="btn btn-primary" onClick={() => onNavigate('menu')}>
+          <button className="btn btn-primary" onClick={() => navigate('/wonder-bread/menu')}>
             Start Shopping
           </button>
         </div>

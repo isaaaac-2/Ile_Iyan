@@ -2,17 +2,37 @@
  * Wonder Bread Order/Cart Page
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { createOrder } from '../services/api';
 import './OrderPage.css';
 
-function OrderPage({ onNavigate }) {
-  const { cartItems, removeFromCart, updateQuantity, clearCart, getCartTotal } = useCart();
-  const { isAuthenticated } = useAuth();
+function OrderPage() {
+  const navigate = useNavigate();
+  const cartContext = useCart();
+  const cartItems = cartContext?.cart || [];
+  const { removeFromCart, updateQuantity, clearCart, getTotal: getCartTotal } = cartContext || {};
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      navigate('/wonder-bread/login');
+    }
+  }, [isAuthenticated, authLoading, navigate]);
+
+  // Show loading while auth is checking
+  if (authLoading) {
+    return (
+      <div className="order-page">
+        <div className="loading">Loading...</div>
+      </div>
+    );
+  }
 
   const handleQuantityChange = (itemId, newQuantity) => {
     if (newQuantity < 1) return;
@@ -26,11 +46,11 @@ function OrderPage({ onNavigate }) {
   const handleCheckout = async () => {
     if (!isAuthenticated) {
       alert('Please login to complete your order');
-      onNavigate('login');
+      navigate('/wonder-bread/login');
       return;
     }
 
-    if (cartItems.length === 0) {
+    if (!cartItems || cartItems.length === 0) {
       alert('Your cart is empty');
       return;
     }
@@ -53,7 +73,7 @@ function OrderPage({ onNavigate }) {
       await createOrder(orderData);
       clearCart();
       alert('Order placed successfully!');
-      onNavigate('tracking');
+      navigate('/wonder-bread/tracking');
     } catch (err) {
       setError(err.message || 'Failed to place order');
     } finally {
@@ -61,14 +81,14 @@ function OrderPage({ onNavigate }) {
     }
   };
 
-  if (cartItems.length === 0) {
+  if (!cartItems || cartItems.length === 0) {
     return (
       <div className="order-page">
         <div className="empty-cart">
           <div className="empty-cart-icon">🛒</div>
           <h2>Your cart is empty</h2>
           <p>Add some fresh bread to get started!</p>
-          <button className="btn btn-primary" onClick={() => onNavigate('menu')}>
+          <button className="btn btn-primary" onClick={() => navigate('/wonder-bread/menu')}>
             Browse Menu
           </button>
         </div>
@@ -158,7 +178,7 @@ function OrderPage({ onNavigate }) {
 
           <button
             className="btn btn-secondary btn-full"
-            onClick={() => onNavigate('menu')}
+            onClick={() => navigate('/wonder-bread/menu')}
           >
             Continue Shopping
           </button>

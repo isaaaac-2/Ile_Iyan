@@ -3,10 +3,12 @@
  */
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './AuthPages.css';
 
-function SignupPage({ onNavigate }) {
+function SignupPage() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -53,7 +55,7 @@ function SignupPage({ onNavigate }) {
         password: formData.password,
         promotional_offers: formData.agreeToPromotions ? 1 : 0
       });
-      onNavigate('profile');
+      navigate('/wonder-bread/profile');
     } catch (err) {
       setError(err.message || 'Registration failed. Please try again.');
     }
@@ -162,7 +164,7 @@ function SignupPage({ onNavigate }) {
           <div className="auth-footer">
             <p>
               Already have an account?{' '}
-              <button className="link-button" onClick={() => onNavigate('login')}>
+              <button className="link-button" onClick={() => navigate('/wonder-bread/login')}>
                 Log In
               </button>
             </p>

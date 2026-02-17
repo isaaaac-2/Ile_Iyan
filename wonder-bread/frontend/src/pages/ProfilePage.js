@@ -4,11 +4,13 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getProfile, updateProfile, getOrders } from '../services/api';
 import './ProfilePage.css';
 
-function ProfilePage({ onNavigate }) {
+function ProfilePage() {
+  const navigate = useNavigate();
   const { logout, isAuthenticated, loading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
   const [profile, setProfile] = useState(null);
@@ -26,7 +28,7 @@ function ProfilePage({ onNavigate }) {
     if (authLoading) return;
     
     if (!isAuthenticated) {
-      onNavigate('login');
+      navigate('/wonder-bread/login');
       return;
     }
     loadProfile();
@@ -77,7 +79,7 @@ function ProfilePage({ onNavigate }) {
 
   const handleLogout = async () => {
     await logout();
-    onNavigate('landing');
+    navigate('/wonder-bread');
   };
 
   const getStatusColor = (status) => {
@@ -208,7 +210,7 @@ function ProfilePage({ onNavigate }) {
               {orders.length === 0 ? (
                 <div className="no-orders">
                   <p>You haven't placed any orders yet.</p>
-                  <button className="btn btn-primary" onClick={() => onNavigate('menu')}>
+                  <button className="btn btn-primary" onClick={() => navigate('/wonder-bread/menu')}>
                     Start Shopping
                   </button>
                 </div>
@@ -239,7 +241,7 @@ function ProfilePage({ onNavigate }) {
                         <span className="order-total">Total: ₦{order.total.toLocaleString()}</span>
                         <button
                           className="btn btn-secondary btn-sm"
-                          onClick={() => onNavigate('tracking')}
+                          onClick={() => navigate('/wonder-bread/tracking')}
                         >
                           Track Order
                         </button>
