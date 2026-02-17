@@ -2,64 +2,64 @@
  * Wonder Bread Signup Page
  */
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import './AuthPages.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import "./AuthPages.css";
 
 function SignupPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    password: '',
-    confirmPassword: '',
-    agreeToPromotions: true
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+    agreeToPromotions: true,
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
 
     // Validate password strength
     if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setError("Password must be at least 6 characters");
       return;
     }
 
     setLoading(true);
-    
+
     try {
       await register({
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
         password: formData.password,
-        promotional_offers: formData.agreeToPromotions ? 1 : 0
+        promotional_offers: formData.agreeToPromotions ? 1 : 0,
       });
-      navigate('/wonder-bread/profile');
+      navigate("/wonder-bread/profile");
     } catch (err) {
-      setError(err.message || 'Registration failed. Please try again.');
+      setError(err.message || "Registration failed. Please try again.");
     }
-    
+
     setLoading(false);
   };
 
@@ -71,9 +71,9 @@ function SignupPage() {
             <h1>Join Wonder Bread</h1>
             <p>Create your account and start ordering fresh bread</p>
           </div>
-          
+
           {error && <div className="error-message">{error}</div>}
-          
+
           <form onSubmit={handleSubmit} className="auth-form">
             <div className="form-group">
               <label htmlFor="name">Full Name</label>
@@ -115,7 +115,7 @@ function SignupPage() {
                 autoComplete="tel"
               />
             </div>
-            
+
             <div className="form-group">
               <label htmlFor="password">Password</label>
               <input
@@ -143,7 +143,7 @@ function SignupPage() {
                 autoComplete="new-password"
               />
             </div>
-            
+
             <div className="form-options">
               <label className="checkbox-label">
                 <input
@@ -155,16 +155,23 @@ function SignupPage() {
                 <span>Send me promotional offers and updates</span>
               </label>
             </div>
-            
-            <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
-              {loading ? 'Creating Account...' : 'Sign Up'}
+
+            <button
+              type="submit"
+              className="btn btn-primary btn-full"
+              disabled={loading}
+            >
+              {loading ? "Creating Account..." : "Sign Up"}
             </button>
           </form>
-          
+
           <div className="auth-footer">
             <p>
-              Already have an account?{' '}
-              <button className="link-button" onClick={() => navigate('/wonder-bread/login')}>
+              Already have an account?{" "}
+              <button
+                className="link-button"
+                onClick={() => navigate("/wonder-bread/login")}
+              >
                 Log In
               </button>
             </p>

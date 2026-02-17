@@ -2,11 +2,11 @@
  * Wonder Bread Navbar Component
  */
 
-import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { useCart } from '../context/CartContext';
-import './Navbar.css';
+import React from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
+import "./Navbar.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -21,15 +21,15 @@ const Navbar = () => {
   const handleCartClick = (e) => {
     if (!isAuthenticated) {
       e.preventDefault();
-      alert('Please login to view your cart');
-      navigate('/wonder-bread/login');
+      alert("Please login to view your cart");
+      navigate("/wonder-bread/login");
       return;
     }
-    navigate('/wonder-bread/orders');
+    navigate("/wonder-bread/orders");
   };
 
   const isActive = (path) => {
-    return location.pathname === path ? 'active' : '';
+    return location.pathname === path ? "active" : "";
   };
 
   return (
@@ -41,19 +41,31 @@ const Navbar = () => {
         </Link>
 
         <div className="wb-navbar-links">
-          <Link to="/wonder-bread" className={`wb-nav-link ${isActive('/wonder-bread')}`}>
+          <Link
+            to="/wonder-bread"
+            className={`wb-nav-link ${isActive("/wonder-bread")}`}
+          >
             Home
           </Link>
-          <Link to="/wonder-bread/menu" className={`wb-nav-link ${isActive('/wonder-bread/menu')}`}>
+          <Link
+            to="/wonder-bread/menu"
+            className={`wb-nav-link ${isActive("/wonder-bread/menu")}`}
+          >
             Menu
           </Link>
-          
+
           {isAuthenticated && (
             <>
-              <Link to="/wonder-bread/orders" className={`wb-nav-link ${isActive('/wonder-bread/orders')}`}>
+              <Link
+                to="/wonder-bread/orders"
+                className={`wb-nav-link ${isActive("/wonder-bread/orders")}`}
+              >
                 My Orders
               </Link>
-              <Link to="/wonder-bread/profile" className={`wb-nav-link ${isActive('/wonder-bread/profile')}`}>
+              <Link
+                to="/wonder-bread/profile"
+                className={`wb-nav-link ${isActive("/wonder-bread/profile")}`}
+              >
                 Profile
               </Link>
             </>
@@ -61,7 +73,11 @@ const Navbar = () => {
         </div>
 
         <div className="wb-navbar-actions">
-          <button onClick={handleCartClick} className="wb-cart-link" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+          <button
+            onClick={handleCartClick}
+            className="wb-cart-link"
+            style={{ background: "none", border: "none", cursor: "pointer" }}
+          >
             🛒
             {getItemCount() > 0 && (
               <span className="wb-cart-badge">{getItemCount()}</span>
@@ -71,12 +87,18 @@ const Navbar = () => {
           {isAuthenticated ? (
             <div className="wb-user-menu">
               <span className="wb-user-name">👋 {user?.name}</span>
-              <button onClick={handleLogout} className="wb-btn wb-btn-secondary wb-btn-sm">
+              <button
+                onClick={handleLogout}
+                className="wb-btn wb-btn-secondary wb-btn-sm"
+              >
                 Logout
               </button>
             </div>
           ) : (
-            <Link to="/wonder-bread/login" className="wb-btn wb-btn-primary wb-btn-sm">
+            <Link
+              to="/wonder-bread/login"
+              className="wb-btn wb-btn-primary wb-btn-sm"
+            >
               Login
             </Link>
           )}

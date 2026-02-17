@@ -2,19 +2,19 @@
  * Wonder Bread Menu Page
  */
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
-import { getMenu } from '../services/api';
-import './MenuPage.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
+import { getMenu } from "../services/api";
+import "./MenuPage.css";
 
 function MenuPage() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -26,7 +26,7 @@ function MenuPage() {
       const data = await getMenu();
       setProducts(data.products || []);
     } catch (err) {
-      setError('Failed to load menu');
+      setError("Failed to load menu");
     } finally {
       setLoading(false);
     }
@@ -39,11 +39,11 @@ function MenuPage() {
 
   const handleViewCart = () => {
     if (!isAuthenticated) {
-      alert('Please login to view your cart');
-      navigate('/wonder-bread/login');
+      alert("Please login to view your cart");
+      navigate("/wonder-bread/login");
       return;
     }
-    navigate('/wonder-bread/orders');
+    navigate("/wonder-bread/orders");
   };
 
   if (loading) {
@@ -66,43 +66,47 @@ function MenuPage() {
     <div className="menu-page">
       <div className="menu-header">
         <h1>Our Bread Menu</h1>
-        <p>Fresh baked daily. Quality you can trust at prices that make sense.</p>
+        <p>
+          Fresh baked daily. Quality you can trust at prices that make sense.
+        </p>
       </div>
 
       <div className="products-grid">
         {products.map((product) => (
           <div key={product.id} className="product-card">
             <div className="product-image">
-              <img 
-                src={`/images/${product.image}`} 
+              <img
+                src={`/images/${product.image}`}
                 alt={product.name}
                 onError={(e) => {
-                  e.target.src = '/images/placeholder-bread.jpg';
+                  e.target.src = "/images/placeholder-bread.jpg";
                 }}
               />
               {!product.available && (
                 <div className="out-of-stock-badge">Out of Stock</div>
               )}
             </div>
-            
+
             <div className="product-info">
               <h3>{product.name}</h3>
               <p className="product-description">{product.description}</p>
               <div className="product-details">
                 <span className="weight">{product.weight}</span>
               </div>
-              
+
               <div className="product-footer">
                 <div className="price-section">
-                  <span className="price">₦{product.price.toLocaleString()}</span>
+                  <span className="price">
+                    ₦{product.price.toLocaleString()}
+                  </span>
                 </div>
-                
+
                 <button
                   className="btn btn-primary"
                   onClick={() => handleAddToCart(product)}
                   disabled={!product.available}
                 >
-                  {product.available ? 'Add to Cart' : 'Unavailable'}
+                  {product.available ? "Add to Cart" : "Unavailable"}
                 </button>
               </div>
             </div>

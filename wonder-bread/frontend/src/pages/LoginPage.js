@@ -2,31 +2,31 @@
  * Wonder Bread Login Page
  */
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import './AuthPages.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import "./AuthPages.css";
 
 function LoginPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
-    
+
     try {
       await login(email, password);
-      navigate('/wonder-bread/profile');
+      navigate("/wonder-bread/profile");
     } catch (err) {
-      setError(err.message || 'Invalid email or password');
+      setError(err.message || "Invalid email or password");
     }
-    
+
     setLoading(false);
   };
 
@@ -38,9 +38,9 @@ function LoginPage() {
             <h1>Welcome Back</h1>
             <p>Log in to your Wonder Bread account</p>
           </div>
-          
+
           {error && <div className="error-message">{error}</div>}
-          
+
           <form onSubmit={handleSubmit} className="auth-form">
             <div className="form-group">
               <label htmlFor="email">Email Address</label>
@@ -54,7 +54,7 @@ function LoginPage() {
                 autoComplete="email"
               />
             </div>
-            
+
             <div className="form-group">
               <label htmlFor="password">Password</label>
               <input
@@ -67,22 +67,33 @@ function LoginPage() {
                 autoComplete="current-password"
               />
             </div>
-            
+
             <div className="form-options">
-              <button type="button" className="link-button" onClick={() => alert('Password reset feature coming soon!')}>
+              <button
+                type="button"
+                className="link-button"
+                onClick={() => alert("Password reset feature coming soon!")}
+              >
                 Forgot password?
               </button>
             </div>
-            
-            <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
-              {loading ? 'Logging in...' : 'Log In'}
+
+            <button
+              type="submit"
+              className="btn btn-primary btn-full"
+              disabled={loading}
+            >
+              {loading ? "Logging in..." : "Log In"}
             </button>
           </form>
-          
+
           <div className="auth-footer">
             <p>
-              Don't have an account?{' '}
-              <button className="link-button" onClick={() => navigate('/wonder-bread/signup')}>
+              Don't have an account?{" "}
+              <button
+                className="link-button"
+                onClick={() => navigate("/wonder-bread/signup")}
+              >
                 Sign Up
               </button>
             </p>
