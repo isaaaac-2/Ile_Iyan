@@ -32,7 +32,7 @@
 
 .profile-header h1 {
   font-size: 2rem;
-  color: #8B4513;
+  color: #8b4513;
 }
 
 .profile-tabs {
@@ -55,12 +55,12 @@
 }
 
 .tab:hover {
-  color: #D4A373;
+  color: #d4a373;
 }
 
 .tab.active {
-  color: #D4A373;
-  border-bottom-color: #D4A373;
+  color: #d4a373;
+  border-bottom-color: #d4a373;
 }
 
 .section-header {
@@ -72,7 +72,7 @@
 
 .section-header h2 {
   font-size: 1.5rem;
-  color: #8B4513;
+  color: #8b4513;
 }
 
 .edit-buttons {
@@ -108,7 +108,7 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: #D4A373;
+  border-color: #d4a373;
 }
 
 .form-value {
@@ -153,7 +153,7 @@
 
 .order-header h3 {
   font-size: 1.2rem;
-  color: #8B4513;
+  color: #8b4513;
   margin-bottom: 0.25rem;
 }
 
@@ -194,7 +194,7 @@
 .order-total {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #D4A373;
+  color: #d4a373;
 }
 
 .btn {
@@ -208,22 +208,22 @@
 }
 
 .btn-primary {
-  background-color: #D4A373;
+  background-color: #d4a373;
   color: white;
 }
 
 .btn-primary:hover {
-  background-color: #8B4513;
+  background-color: #8b4513;
 }
 
 .btn-secondary {
   background-color: #fff;
-  color: #D4A373;
-  border: 2px solid #D4A373;
+  color: #d4a373;
+  border: 2px solid #d4a373;
 }
 
 .btn-secondary:hover {
-  background-color: #D4A373;
+  background-color: #d4a373;
   color: white;
 }
 

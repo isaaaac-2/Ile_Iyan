@@ -9,7 +9,7 @@
 
 .order-container h1 {
   font-size: 2rem;
-  color: #8B4513;
+  color: #8b4513;
   margin-bottom: 2rem;
 }
 
@@ -25,7 +25,7 @@
 
 .empty-cart h2 {
   font-size: 1.8rem;
-  color: #8B4513;
+  color: #8b4513;
   margin-bottom: 0.5rem;
 }
 
@@ -65,7 +65,7 @@
   border-radius: 8px;
   overflow: hidden;
   flex-shrink: 0;
-  background: #F5E6D3;
+  background: #f5e6d3;
 }
 
 .item-image img {
@@ -80,7 +80,7 @@
 
 .item-details h3 {
   font-size: 1.1rem;
-  color: #8B4513;
+  color: #8b4513;
   margin-bottom: 0.25rem;
 }
 
@@ -105,9 +105,9 @@
 .qty-btn {
   width: 32px;
   height: 32px;
-  border: 2px solid #D4A373;
+  border: 2px solid #d4a373;
   background: white;
-  color: #D4A373;
+  color: #d4a373;
   border-radius: 6px;
   font-size: 1.2rem;
   cursor: pointer;
@@ -115,7 +115,7 @@
 }
 
 .qty-btn:hover {
-  background: #D4A373;
+  background: #d4a373;
   color: white;
 }
 
@@ -139,7 +139,7 @@
 .total-amount {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #D4A373;
+  color: #d4a373;
 }
 
 .remove-btn {
@@ -183,7 +183,7 @@
   padding-top: 1rem;
   font-size: 1.3rem;
   font-weight: 700;
-  color: #8B4513;
+  color: #8b4513;
 }
 
 .checkout-btn {
@@ -202,12 +202,12 @@
 }
 
 .btn-primary {
-  background-color: #D4A373;
+  background-color: #d4a373;
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #8B4513;
+  background-color: #8b4513;
 }
 
 .btn-primary:disabled {
@@ -217,12 +217,12 @@
 
 .btn-secondary {
   background-color: #fff;
-  color: #D4A373;
-  border: 2px solid #D4A373;
+  color: #d4a373;
+  border: 2px solid #d4a373;
 }
 
 .btn-secondary:hover {
-  background-color: #D4A373;
+  background-color: #d4a373;
   color: white;
 }
 
