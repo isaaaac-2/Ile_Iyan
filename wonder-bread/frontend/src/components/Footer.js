@@ -2,8 +2,8 @@
  * Wonder Bread Footer Component
  */
 
-import React from 'react';
-import './Footer.css';
+import React from "react";
+import "./Footer.css";
 
 const Footer = ({ currentPage, onNavigate }) => {
   return (
@@ -11,7 +11,9 @@ const Footer = ({ currentPage, onNavigate }) => {
       <div className="wb-footer-container">
         <div className="wb-footer-section">
           <h3 className="wb-footer-title">🍞 Wonder Bread</h3>
-          <p className="wb-footer-tagline">Quality Bread, Prices That Make Sense</p>
+          <p className="wb-footer-tagline">
+            Quality Bread, Prices That Make Sense
+          </p>
           <p className="wb-footer-text">
             Fresh baked daily. Save ₦500 on every large loaf!
           </p>
@@ -20,10 +22,58 @@ const Footer = ({ currentPage, onNavigate }) => {
         <div className="wb-footer-section">
           <h4 className="wb-footer-heading">Quick Links</h4>
           <ul className="wb-footer-links">
-            <li><button onClick={() => onNavigate('landing')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}>Home</button></li>
-            <li><button onClick={() => onNavigate('menu')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}>Menu</button></li>
-            <li><button onClick={() => onNavigate('tracking')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}>Orders</button></li>
-            <li><button onClick={() => onNavigate('profile')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}>Profile</button></li>
+            <li>
+              <button
+                onClick={() => onNavigate("landing")}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "inherit",
+                }}
+              >
+                Home
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => onNavigate("menu")}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "inherit",
+                }}
+              >
+                Menu
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => onNavigate("tracking")}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "inherit",
+                }}
+              >
+                Orders
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => onNavigate("profile")}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "inherit",
+                }}
+              >
+                Profile
+              </button>
+            </li>
           </ul>
         </div>
 
