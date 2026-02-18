@@ -308,6 +308,7 @@
     flex-direction: column;
     gap: 0.5rem;
   }
+}
 
 /* Order Tabs Styling */
 .order-tabs {
