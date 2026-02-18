@@ -64,7 +64,7 @@ export const CartProvider = ({ children }) => {
   };
 
   const removeFromCart = (productId) => {
-    setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
+    setCart((prevCart) => prevCart.filter((item) => item.product_id !== productId));
   };
 
   const updateQuantity = (productId, quantity) => {
@@ -75,7 +75,7 @@ export const CartProvider = ({ children }) => {
 
     setCart((prevCart) =>
       prevCart.map((item) =>
-        item.id === productId ? { ...item, quantity } : item
+        item.product_id === productId ? { ...item, quantity } : item
       )
     );
   };

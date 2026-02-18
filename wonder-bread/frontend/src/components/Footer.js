@@ -2,31 +2,16 @@
  * Wonder Bread Footer Component
  */
 
-import React from "react";
-import "./Footer.css";
+import React from 'react';
+import './Footer.css';
 
-const Footer = ({ currentPage, onNavigate }) => {
-  // Show minimal footer (only copyright) on login and signup pages
-  const isAuthPage = currentPage === "login" || currentPage === "signup";
-
-  if (isAuthPage) {
-    return (
-      <footer className="wb-footer wb-footer-minimal">
-        <div className="wb-footer-bottom">
-          <p>&copy; 2026 Wonder Bread. All rights reserved.</p>
-        </div>
-      </footer>
-    );
-  }
-
+const Footer = () => {
   return (
     <footer className="wb-footer">
       <div className="wb-footer-container">
         <div className="wb-footer-section">
           <h3 className="wb-footer-title">🍞 Wonder Bread</h3>
-          <p className="wb-footer-tagline">
-            Quality Bread, Prices That Make Sense
-          </p>
+          <p className="wb-footer-tagline">Quality Bread, Prices That Make Sense</p>
           <p className="wb-footer-text">
             Fresh baked daily. Save ₦500 on every large loaf!
           </p>
@@ -35,58 +20,10 @@ const Footer = ({ currentPage, onNavigate }) => {
         <div className="wb-footer-section">
           <h4 className="wb-footer-heading">Quick Links</h4>
           <ul className="wb-footer-links">
-            <li>
-              <button
-                onClick={() => onNavigate("landing")}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "inherit",
-                }}
-              >
-                Home
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => onNavigate("menu")}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "inherit",
-                }}
-              >
-                Menu
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => onNavigate("tracking")}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "inherit",
-                }}
-              >
-                Orders
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => onNavigate("profile")}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "inherit",
-                }}
-              >
-                Profile
-              </button>
-            </li>
+            <li><a href="/wonder-bread">Home</a></li>
+            <li><a href="/wonder-bread/menu">Menu</a></li>
+            <li><a href="/wonder-bread/orders">Orders</a></li>
+            <li><a href="/wonder-bread/profile">Profile</a></li>
           </ul>
         </div>
 

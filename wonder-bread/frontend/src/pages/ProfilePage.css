@@ -14,37 +14,6 @@
   color: #666;
 }
 
-.alert {
-  padding: 1rem;
-  border-radius: 6px;
-  margin-bottom: 1.5rem;
-  font-weight: 500;
-  animation: slideDown 0.3s ease;
-}
-
-.alert-error {
-  background-color: #ffebee;
-  color: #c62828;
-  border-left: 4px solid #c62828;
-}
-
-.alert-success {
-  background-color: #e8f5e9;
-  color: #2e7d32;
-  border-left: 4px solid #4caf50;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .profile-container {
   background: white;
   border-radius: 12px;
@@ -63,7 +32,7 @@
 
 .profile-header h1 {
   font-size: 2rem;
-  color: #8b4513;
+  color: #8B4513;
 }
 
 .profile-tabs {
@@ -86,12 +55,12 @@
 }
 
 .tab:hover {
-  color: #d4a373;
+  color: #D4A373;
 }
 
 .tab.active {
-  color: #d4a373;
-  border-bottom-color: #d4a373;
+  color: #D4A373;
+  border-bottom-color: #D4A373;
 }
 
 .section-header {
@@ -103,7 +72,7 @@
 
 .section-header h2 {
   font-size: 1.5rem;
-  color: #8b4513;
+  color: #8B4513;
 }
 
 .edit-buttons {
@@ -139,7 +108,7 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: #d4a373;
+  border-color: #D4A373;
 }
 
 .form-value {
@@ -184,7 +153,7 @@
 
 .order-header h3 {
   font-size: 1.2rem;
-  color: #8b4513;
+  color: #8B4513;
   margin-bottom: 0.25rem;
 }
 
@@ -225,7 +194,7 @@
 .order-total {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #d4a373;
+  color: #D4A373;
 }
 
 .btn {
@@ -239,22 +208,22 @@
 }
 
 .btn-primary {
-  background-color: #d4a373;
+  background-color: #D4A373;
   color: white;
 }
 
 .btn-primary:hover {
-  background-color: #8b4513;
+  background-color: #8B4513;
 }
 
 .btn-secondary {
   background-color: #fff;
-  color: #d4a373;
-  border: 2px solid #d4a373;
+  color: #D4A373;
+  border: 2px solid #D4A373;
 }
 
 .btn-secondary:hover {
-  background-color: #d4a373;
+  background-color: #D4A373;
   color: white;
 }
 
@@ -263,45 +232,27 @@
   font-size: 0.9rem;
 }
 
-/* Mobile Responsive (768px) */
+/* Mobile Responsive */
 @media (max-width: 768px) {
-  .profile-page {
-    padding: 1.5rem 1rem;
-  }
-
-  .profile-container {
-    padding: 1.5rem;
-  }
-
   .profile-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
   }
 
-  .profile-header h1 {
-    font-size: 1.5rem;
-  }
-
   .profile-tabs {
     overflow-x: auto;
     white-space: nowrap;
-    margin-bottom: 1.5rem;
   }
 
   .tab {
     padding: 0.75rem 1.5rem;
-    font-size: 0.9rem;
   }
 
   .section-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
-  }
-
-  .section-header h2 {
-    font-size: 1.25rem;
   }
 
   .order-header,
@@ -309,122 +260,5 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.75rem;
-  }
-}
-
-/* Mobile (480px) */
-@media (max-width: 480px) {
-  .profile-page {
-    padding: 1rem 0.75rem;
-  }
-
-  .profile-container {
-    padding: 1rem;
-    border-radius: 8px;
-  }
-
-  .profile-header {
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-  }
-
-  .profile-header h1 {
-    font-size: 1.25rem;
-  }
-
-  .profile-header button {
-    width: 100%;
-  }
-
-  .profile-tabs {
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .tab {
-    padding: 0.65rem 1rem;
-    font-size: 0.8rem;
-  }
-
-  .section-header {
-    margin-bottom: 1.5rem;
-  }
-
-  .section-header h2 {
-    font-size: 1.1rem;
-  }
-
-  .section-header button {
-    width: 100%;
-  }
-
-  .form-group {
-    gap: 0.35rem;
-  }
-
-  .form-group label {
-    font-size: 0.85rem;
-  }
-
-  .form-group input {
-    padding: 0.65rem 0.75rem;
-    font-size: 0.9rem;
-  }
-
-  .form-value {
-    padding: 0.5rem 0;
-    font-size: 0.9rem;
-  }
-
-  .no-orders {
-    padding: 2rem 1rem;
-  }
-
-  .order-item {
-    padding: 1rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .order-header {
-    margin-bottom: 0.75rem;
-  }
-
-  .order-header h3 {
-    font-size: 1rem;
-  }
-
-  .order-date {
-    font-size: 0.8rem;
-  }
-
-  .order-items {
-    margin: 0.75rem 0;
-    padding: 0.75rem;
-  }
-
-  .order-item-detail {
-    padding: 0.4rem 0;
-    font-size: 0.9rem;
-  }
-
-  .order-footer {
-    padding-top: 0.75rem;
-    gap: 0.75rem;
-  }
-
-  .order-total {
-    font-size: 1rem;
-  }
-
-  .btn {
-    padding: 0.65rem 1rem;
-    font-size: 0.9rem;
-    width: 100%;
-  }
-
-  .btn-sm {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.8rem;
-    width: auto;
   }
 }

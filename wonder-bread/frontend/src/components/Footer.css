@@ -7,19 +7,6 @@
   padding: 3rem 0 1rem;
 }
 
-/* Minimal footer for auth pages (login/signup) */
-.wb-footer-minimal {
-  margin-top: auto;
-  padding: 0.75rem 0;
-}
-
-.wb-footer-minimal .wb-footer-bottom {
-  margin-top: 0;
-  padding-top: 0.5rem;
-  border-top: none;
-  font-size: 0.85rem;
-}
-
 .wb-footer-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -58,7 +45,6 @@
   margin: 0;
   line-height: 1.6;
   opacity: 0.9;
-  font-size: 0.95rem;
 }
 
 .wb-footer-links,
@@ -71,20 +57,13 @@
   gap: 0.5rem;
 }
 
-.wb-footer-links button,
 .wb-footer-links a {
   color: var(--white);
   text-decoration: none;
   opacity: 0.9;
   transition: opacity 0.3s ease;
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-align: left;
-  font-size: 0.95rem;
 }
 
-.wb-footer-links button:hover,
 .wb-footer-links a:hover {
   opacity: 1;
   color: var(--primary-color);
@@ -92,7 +71,6 @@
 
 .wb-footer-features li {
   opacity: 0.9;
-  font-size: 0.95rem;
 }
 
 .wb-footer-bottom {
@@ -101,86 +79,15 @@
   padding-top: 1rem;
   text-align: center;
   opacity: 0.8;
-  font-size: 0.9rem;
 }
 
-/* Tablet (768px) */
 @media (max-width: 768px) {
-  .wb-footer {
-    padding: 2rem 0 1rem;
-    margin-top: 3rem;
-  }
-
-  .wb-footer-container {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    padding: 0 1rem;
-  }
-
-  .wb-footer-tagline {
-    font-size: 1rem;
-  }
-
-  .wb-footer-heading {
-    font-size: 1rem;
-  }
-
-  .wb-footer-text {
-    font-size: 0.9rem;
-  }
-
-  .wb-footer-features li {
-    font-size: 0.9rem;
-  }
-}
-
-/* Mobile (480px) */
-@media (max-width: 480px) {
-  .wb-footer {
-    padding: 1.5rem 0 0.75rem;
-    margin-top: 2rem;
-  }
-
   .wb-footer-container {
     grid-template-columns: 1fr;
-    gap: 1.25rem;
-    padding: 0 1rem;
+    gap: 1.5rem;
   }
 
-  .wb-footer-title {
-    font-size: 1.25rem;
-  }
-
-  .wb-footer-tagline {
-    font-size: 0.95rem;
-  }
-
-  .wb-footer-heading {
-    font-size: 0.95rem;
-  }
-
-  .wb-footer-text {
-    font-size: 0.85rem;
-    margin: 0.25rem 0;
-  }
-
-  .wb-footer-links,
-  .wb-footer-features {
-    gap: 0.4rem;
-  }
-
-  .wb-footer-links button,
-  .wb-footer-links a {
-    font-size: 0.85rem;
-  }
-
-  .wb-footer-features li {
-    font-size: 0.85rem;
-  }
-
-  .wb-footer-bottom {
-    margin-top: 1.5rem;
-    padding-top: 1rem;
-    font-size: 0.8rem;
+  .wb-footer {
+    padding: 2rem 0 1rem;
   }
 }
