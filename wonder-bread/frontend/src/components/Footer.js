@@ -3,9 +3,24 @@
  */
 
 import React from 'react';
+import { useAuth } from '../context/AuthContext';
 import './Footer.css';
 
 const Footer = () => {
+  const { isAuthenticated } = useAuth();
+
+  // Show only copyright for unauthenticated users
+  if (!isAuthenticated) {
+    return (
+      <footer className="wb-footer wb-footer-minimal">
+        <div className="wb-footer-bottom">
+          <p>&copy; 2026 Wonder Bread. All rights reserved.</p>
+        </div>
+      </footer>
+    );
+  }
+
+  // Show full footer for authenticated users
   return (
     <footer className="wb-footer">
       <div className="wb-footer-container">
@@ -39,7 +54,7 @@ const Footer = () => {
 
         <div className="wb-footer-section">
           <h4 className="wb-footer-heading">Contact Us</h4>
-          <p className="wb-footer-text">📍 Lagos, Nigeria</p>
+          <p className="wb-footer-text">📍 Ibadan, Nigeria</p>
           <p className="wb-footer-text">📞 +234 XXX XXX XXXX</p>
           <p className="wb-footer-text">✉️ info@wonderbread.ng</p>
         </div>

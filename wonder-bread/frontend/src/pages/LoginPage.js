@@ -22,7 +22,7 @@ function LoginPage() {
 
     try {
       await login(email, password);
-      navigate("/wonder-bread/profile");
+      navigate("/wonder-bread/menu");
     } catch (err) {
       setError(err.message || "Invalid email or password");
     }

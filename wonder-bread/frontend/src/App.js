@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import LandingPage from "./pages/LandingPage";
@@ -18,29 +18,46 @@ import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
 import "./WonderBreadApp.css";
 
+function AppContent() {
+  const location = useLocation();
+  
+  // Pages where footer should NOT be shown (pre-auth pages)
+  const noFooterPages = [
+    "/wonder-bread",
+    "/wonder-bread/login",
+    "/wonder-bread/signup"
+  ];
+  
+  const showFooter = !noFooterPages.includes(location.pathname);
+
+  return (
+    <div className="wonder-bread-app">
+      <Navbar />
+      <main className="main-content">
+        <Routes>
+          <Route path="/wonder-bread" element={<LandingPage />} />
+          <Route path="/wonder-bread/login" element={<LoginPage />} />
+          <Route path="/wonder-bread/signup" element={<SignupPage />} />
+          <Route path="/wonder-bread/menu" element={<MenuPage />} />
+          <Route path="/wonder-bread/orders" element={<OrderPage />} />
+          <Route path="/wonder-bread/profile" element={<ProfilePage />} />
+          <Route
+            path="/wonder-bread/tracking"
+            element={<OrderTrackingPage />}
+          />
+        </Routes>
+      </main>
+      {showFooter && <Footer />}
+    </div>
+  );
+}
+
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <CartProvider>
-          <div className="wonder-bread-app">
-            <Navbar />
-            <main className="main-content">
-              <Routes>
-                <Route path="/wonder-bread" element={<LandingPage />} />
-                <Route path="/wonder-bread/login" element={<LoginPage />} />
-                <Route path="/wonder-bread/signup" element={<SignupPage />} />
-                <Route path="/wonder-bread/menu" element={<MenuPage />} />
-                <Route path="/wonder-bread/orders" element={<OrderPage />} />
-                <Route path="/wonder-bread/profile" element={<ProfilePage />} />
-                <Route
-                  path="/wonder-bread/tracking"
-                  element={<OrderTrackingPage />}
-                />
-              </Routes>
-            </main>
-            <Footer />
-          </div>
+          <AppContent />
         </CartProvider>
       </AuthProvider>
     </BrowserRouter>

@@ -112,6 +112,12 @@
   font-weight: 600;
 }
 
+.wb-navbar-auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .wb-btn-sm {
   padding: 8px 16px;
   font-size: 0.875rem;
@@ -122,6 +128,15 @@
   .wb-navbar-container {
     flex-wrap: wrap;
     padding: 1rem;
+    gap: 1rem;
+  }
+
+  .wb-navbar-brand {
+    font-size: 1.2rem;
+  }
+
+  .wb-navbar-icon {
+    font-size: 1.5rem;
   }
 
   .wb-navbar-links {
@@ -135,11 +150,61 @@
   }
 
   .wb-nav-link {
-    padding: 0.5rem;
+    padding: 0.75rem 0.5rem;
     font-size: 0.875rem;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .wb-user-name {
     display: none;
+  }
+  
+  .wb-cart-link {
+    font-size: 1.25rem;
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .wb-navbar-auth-buttons {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .wb-btn-sm {
+    width: 100%;
+    padding: 10px 12px;
+  }
+}
+
+/* Extra small phones */
+@media (max-width: 480px) {
+  .wb-navbar-container {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+  
+  .wb-navbar-links {
+    gap: 0.25rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+  }
+
+  .wb-navbar-auth-buttons {
+    flex-direction: row;
+    gap: 0.5rem;
+    width: auto;
+  }
+
+  .wb-btn-sm {
+    width: auto;
+    padding: 8px 12px;
+    font-size: 0.8rem;
   }
 }

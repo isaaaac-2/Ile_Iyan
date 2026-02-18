@@ -40,49 +40,49 @@ const Navbar = () => {
           <span className="wb-navbar-title">Wonder Bread</span>
         </Link>
 
-        <div className="wb-navbar-links">
-          <Link
-            to="/wonder-bread"
-            className={`wb-nav-link ${isActive("/wonder-bread")}`}
-          >
-            Home
-          </Link>
-          <Link
-            to="/wonder-bread/menu"
-            className={`wb-nav-link ${isActive("/wonder-bread/menu")}`}
-          >
-            Menu
-          </Link>
+        {isAuthenticated && (
+          <div className="wb-navbar-links">
+            <Link
+              to="/wonder-bread"
+              className={`wb-nav-link ${isActive("/wonder-bread")}`}
+            >
+              Home
+            </Link>
+            <Link
+              to="/wonder-bread/menu"
+              className={`wb-nav-link ${isActive("/wonder-bread/menu")}`}
+            >
+              Menu
+            </Link>
 
-          {isAuthenticated && (
-            <>
-              <Link
-                to="/wonder-bread/orders"
-                className={`wb-nav-link ${isActive("/wonder-bread/orders")}`}
-              >
-                My Orders
-              </Link>
-              <Link
-                to="/wonder-bread/profile"
-                className={`wb-nav-link ${isActive("/wonder-bread/profile")}`}
-              >
-                Profile
-              </Link>
-            </>
-          )}
-        </div>
+            <Link
+              to="/wonder-bread/orders"
+              className={`wb-nav-link ${isActive("/wonder-bread/orders")}`}
+            >
+              My Orders
+            </Link>
+            <Link
+              to="/wonder-bread/profile"
+              className={`wb-nav-link ${isActive("/wonder-bread/profile")}`}
+            >
+              Profile
+            </Link>
+          </div>
+        )}
 
         <div className="wb-navbar-actions">
-          <button
-            onClick={handleCartClick}
-            className="wb-cart-link"
-            style={{ background: "none", border: "none", cursor: "pointer" }}
-          >
-            🛒
-            {getItemCount() > 0 && (
-              <span className="wb-cart-badge">{getItemCount()}</span>
-            )}
-          </button>
+          {isAuthenticated && (
+            <button
+              onClick={handleCartClick}
+              className="wb-cart-link"
+              style={{ background: "none", border: "none", cursor: "pointer" }}
+            >
+              🛒
+              {getItemCount() > 0 && (
+                <span className="wb-cart-badge">{getItemCount()}</span>
+              )}
+            </button>
+          )}
 
           {isAuthenticated ? (
             <div className="wb-user-menu">
@@ -95,12 +95,20 @@ const Navbar = () => {
               </button>
             </div>
           ) : (
-            <Link
-              to="/wonder-bread/login"
-              className="wb-btn wb-btn-primary wb-btn-sm"
-            >
-              Login
-            </Link>
+            <div className="wb-navbar-auth-buttons">
+              <Link
+                to="/wonder-bread/login"
+                className="wb-btn wb-btn-primary wb-btn-sm"
+              >
+                Login
+              </Link>
+              <Link
+                to="/wonder-bread/signup"
+                className="wb-btn wb-btn-outline wb-btn-sm"
+              >
+                Sign Up
+              </Link>
+            </div>
           )}
         </div>
       </div>

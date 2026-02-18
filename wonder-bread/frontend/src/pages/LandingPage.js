@@ -5,10 +5,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import BreadAnimation from '../components/BreadAnimation';
+import { useAuth } from '../context/AuthContext';
 import './LandingPage.css';
 
 const LandingPage = () => {
+  const { isAuthenticated } = useAuth();
   const [loavesBaked, setLoavesBaked] = useState(1247);
   const [countdown, setCountdown] = useState(45);
   const [testimonialIndex, setTestimonialIndex] = useState(0);
@@ -75,13 +76,16 @@ const LandingPage = () => {
             <Link to="/wonder-bread/menu" className="wb-btn wb-btn-primary wb-btn-lg">
               Order Now
             </Link>
-            <Link to="/wonder-bread/signup" className="wb-btn wb-btn-outline wb-btn-lg">
-              Sign Up for Deals
-            </Link>
+            {isAuthenticated ? (
+              <Link to="/wonder-bread/orders" className="wb-btn wb-btn-outline wb-btn-lg">
+                My Orders
+              </Link>
+            ) : (
+              <Link to="/wonder-bread/signup" className="wb-btn wb-btn-outline wb-btn-lg">
+                Sign Up for Deals
+              </Link>
+            )}
           </div>
-        </div>
-        <div className="hero-animation">
-          <BreadAnimation />
         </div>
       </section>
 

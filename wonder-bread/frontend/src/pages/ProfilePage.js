@@ -39,11 +39,11 @@ function ProfilePage() {
   const loadProfile = async () => {
     try {
       const data = await getProfile();
-      setProfile(data);
+      setProfile(data.user);
       setFormData({
-        name: data.name || "",
-        email: data.email || "",
-        phone: data.phone || "",
+        name: data.user.name || "",
+        email: data.user.email || "",
+        phone: data.user.phone || "",
       });
     } catch (err) {
       console.error("Failed to load profile", err);

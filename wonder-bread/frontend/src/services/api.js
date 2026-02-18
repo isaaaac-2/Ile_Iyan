@@ -41,14 +41,22 @@ const apiRequest = async (endpoint, options = {}) => {
     headers['Authorization'] = `Bearer ${token}`;
   }
   
+  console.log(`[API] ${options.method || 'GET'} ${endpoint}`, { hasToken: !!token });
+  
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers,
   });
   
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: 'Request failed' }));
-    throw new Error(error.error || `HTTP ${response.status}`);
+    let errorData;
+    try {
+      errorData = await response.json();
+    } catch (e) {
+      errorData = { error: 'Request failed' };
+    }
+    console.error(`[API Error] ${response.status}:`, errorData);
+    throw new Error(errorData.error || `HTTP ${response.status}`);
   }
   
   return response.json();

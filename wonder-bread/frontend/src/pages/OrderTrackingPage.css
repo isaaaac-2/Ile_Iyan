@@ -283,29 +283,287 @@
   }
 }
 
-/* Mobile Responsive */
+/* Tablet Responsive */
 @media (max-width: 768px) {
+  .tracking-page {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .tracking-container h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .order-selector {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .order-selector label {
+    margin-right: 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .order-selector select {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .order-tracking-details {
+    gap: 1.5rem;
+  }
+
+  .order-info-card {
+    padding: 1.25rem;
+  }
+
+  .order-info-card h2 {
+    font-size: 1.3rem;
+  }
+
   .status-tracker {
     flex-wrap: wrap;
-    gap: 2rem;
+    gap: 1.5rem;
+    padding: 1.5rem;
   }
 
   .status-step {
     flex: 1 1 30%;
-    min-width: 80px;
+    min-width: 70px;
+  }
+
+  .status-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
   }
 
   .status-line {
     display: none;
   }
 
-  .estimated-delivery {
-    flex-direction: column;
-    text-align: center;
+  .status-label {
+    font-size: 0.75rem;
+    max-width: 80px;
+  }
+
+  .order-items-card {
+    padding: 1.25rem;
+  }
+
+  .order-items-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .items-list {
+    gap: 0.5rem;
   }
 
   .tracking-item {
     flex-direction: column;
     gap: 0.5rem;
+    padding: 0.6rem;
+  }
+
+  .order-total-row {
+    font-size: 1.1rem;
+  }
+
+  .estimated-delivery {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.25rem;
+  }
+
+  .delivery-icon {
+    font-size: 2rem;
+  }
+
+  .delivery-info h4 {
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .delivery-info p {
+    font-size: 0.85rem;
+  }
+
+  .btn {
+    padding: 0.65rem 1.25rem;
+    font-size: 0.95rem;
+    width: 100%;
+  }
+}
+
+/* Mobile Responsive (Small phones) */
+@media (max-width: 480px) {
+  .tracking-page {
+    padding: 1rem 0.5rem;
+    min-height: 100vh;
+  }
+
+  .loading {
+    padding: 2rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .no-orders {
+    padding: 2rem 1rem;
+  }
+
+  .no-orders-icon {
+    font-size: 3rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .no-orders h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .no-orders p {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .tracking-container h1 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .order-selector {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+  }
+
+  .order-selector label {
+    display: block;
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .order-selector select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 16px;
+    border-radius: 4px;
+  }
+
+  .order-tracking-details {
+    gap: 1rem;
+  }
+
+  .order-info-card {
+    padding: 1rem;
+    border-radius: 8px;
+  }
+
+  .order-info-card h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .order-date {
+    font-size: 0.8rem;
+  }
+
+  .status-tracker {
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+
+  .status-step {
+    flex: 1 1 calc(50% - 0.5rem);
+    min-width: 60px;
+  }
+
+  .status-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .status-label {
+    font-size: 0.7rem;
+    max-width: 70px;
+  }
+
+  .order-items-card {
+    padding: 1rem;
+    border-radius: 8px;
+  }
+
+  .order-items-card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .items-list {
+    gap: 0.5rem;
+  }
+
+  .tracking-item {
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.5rem;
+    background: #f5f5f5;
+    border-radius: 4px;
+  }
+
+  .item-info {
+    gap: 0.5rem;
+    flex-direction: column;
+  }
+
+  .item-name {
+    font-size: 0.9rem;
+  }
+
+  .item-qty,
+  .item-price {
+    font-size: 0.8rem;
+  }
+
+  .order-total-row {
+    font-size: 0.95rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    padding-top: 0.75rem;
+  }
+
+  .estimated-delivery {
+    flex-direction: column;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 8px;
+    gap: 0.75rem;
+  }
+
+  .delivery-icon {
+    font-size: 1.5rem;
+  }
+
+  .delivery-info h4 {
+    font-size: 0.9rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .delivery-info p {
+    font-size: 0.8rem;
+  }
+
+  .btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    width: 100%;
+    min-height: 40px;
+    border-radius: 4px;
   }
 }

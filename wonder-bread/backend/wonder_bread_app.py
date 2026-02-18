@@ -98,6 +98,11 @@ def init_db_if_needed():
         from init_db import init_database
         init_database(DB_PATH)
 
+def get_current_user_id():
+    """Get current authenticated user ID from JWT token."""
+    user_id_str = get_jwt_identity()
+    return int(user_id_str)
+
 # ─── Root Route ───────────────────────────────────────────────────────────────
 
 @app.route("/", methods=["GET"])
@@ -189,8 +194,8 @@ def register():
         conn.commit()
         conn.close()
         
-        # Create access token
-        access_token = create_access_token(identity=user_id)
+        # Create access token (identity must be a string)
+        access_token = create_access_token(identity=str(user_id))
         
         return jsonify({
             "message": "User registered successfully",
@@ -234,8 +239,8 @@ def login():
         if not bcrypt.checkpw(password.encode('utf-8'), user['password_hash'].encode('utf-8')):
             return jsonify({"error": "Invalid email or password"}), 401
         
-        # Create access token
-        access_token = create_access_token(identity=user['id'])
+        # Create access token (identity must be a string)
+        access_token = create_access_token(identity=str(user['id']))
         
         return jsonify({
             "message": "Login successful",
@@ -261,7 +266,7 @@ def logout():
 @jwt_required()
 def get_current_user():
     """Get current authenticated user."""
-    user_id = get_jwt_identity()
+    user_id = get_current_user_id()
     
     try:
         conn = get_db()
@@ -291,7 +296,7 @@ def get_current_user():
 @jwt_required()
 def get_profile():
     """Get user profile with addresses and preferences."""
-    user_id = get_jwt_identity()
+    user_id = get_current_user_id()
     
     try:
         conn = get_db()
@@ -329,7 +334,7 @@ def get_profile():
 @jwt_required()
 def update_profile():
     """Update user profile information."""
-    user_id = get_jwt_identity()
+    user_id = get_current_user_id()
     data = request.get_json()
     
     try:
@@ -371,7 +376,7 @@ def update_profile():
 @jwt_required()
 def get_addresses():
     """Get user delivery addresses."""
-    user_id = get_jwt_identity()
+    user_id = get_current_user_id()
     
     try:
         conn = get_db()
@@ -390,7 +395,7 @@ def get_addresses():
 @jwt_required()
 def add_address():
     """Add a new delivery address."""
-    user_id = get_jwt_identity()
+    user_id = get_current_user_id()
     data = request.get_json()
     
     # Validate required fields
@@ -433,7 +438,7 @@ def add_address():
 @jwt_required()
 def update_preferences():
     """Update user notification preferences."""
-    user_id = get_jwt_identity()
+    user_id = get_current_user_id()
     data = request.get_json()
     
     try:
@@ -498,7 +503,7 @@ def update_preferences():
 @jwt_required()
 def create_order():
     """Create a new order."""
-    user_id = get_jwt_identity()
+    user_id = get_current_user_id()
     data = request.get_json()
     
     # Validate required fields
@@ -562,7 +567,7 @@ def create_order():
 @jwt_required()
 def get_orders():
     """Get user orders."""
-    user_id = get_jwt_identity()
+    user_id = get_current_user_id()
     
     try:
         conn = get_db()
@@ -587,7 +592,7 @@ def get_orders():
 @jwt_required()
 def get_order_by_id(order_id):
     """Get order by ID with tracking information."""
-    user_id = get_jwt_identity()
+    user_id = get_current_user_id()
     
     try:
         conn = get_db()
