@@ -34,6 +34,7 @@ FLASK_ENV=production
 ```
 
 **Important**: Use a secure, random string for `JWT_SECRET_KEY`. You can generate one using:
+
 ```bash
 python -c "import secrets; print(secrets.token_urlsafe(32))"
 ```
@@ -54,6 +55,7 @@ This ensures the frontend API calls route through Vercel's serverless functions.
 - **Manual**: Click **"Deploy"** button in Vercel dashboard
 
 The deployment will:
+
 1. Build the React frontend and output static files
 2. Deploy backend as Python serverless functions at `/api/*`
 3. Rewrite frontend routes for SPA routing
@@ -61,6 +63,7 @@ The deployment will:
 ## API Endpoints
 
 After deployment, your API will be accessible at:
+
 ```
 https://your-vercel-domain.vercel.app/api/auth/login
 https://your-vercel-domain.vercel.app/api/auth/register
@@ -71,18 +74,22 @@ https://your-vercel-domain.vercel.app/api/orders
 ## Important Notes
 
 ### Database Persistence
+
 The current SQLite database (`wonder_bread.db`) is **local to each cold start** on Vercel serverless. For production:
 
 **Option 1: Use Vercel KV (Redis)** - Quick setup
+
 ```bash
 vercel env pull  # Pull KV database URL
 ```
 
 **Option 2: Use PostgreSQL/MySQL** - More reliable
+
 - Add a database service (Supabase, PlanetScale, Railway, etc.)
 - Update `backend/wonder_bread_app.py` to use connection string
 
 **Option 3: SQLite with persistent storage**
+
 - Store database in `/tmp` (persists within a cold start)
 - Regularly backup to external storage
 
@@ -110,6 +117,7 @@ Cold start takes 5-10 seconds from Python dependencies. To improve:
 ## Rollback
 
 If something breaks:
+
 1. Go to Vercel dashboard
 2. Click on a previous deployment
 3. Click **"Promote to Production"**
@@ -123,6 +131,7 @@ If something breaks:
 ## Troubleshooting
 
 **API 500 errors**: Check Vercel function logs
+
 ```
 vercel logs <function-name>
 ```

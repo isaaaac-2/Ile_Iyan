@@ -9,6 +9,7 @@ Wonder Bread is a bakery MVP focused on providing high-quality bread at competit
 ## ✨ Features
 
 ### Customer Features
+
 - **🎨 Dynamic Landing Page** - Animated bread-making visualization
 - **🔐 Authentication** - Secure user registration and login with JWT
 - **👤 User Profiles** - Manage personal information and preferences
@@ -19,6 +20,7 @@ Wonder Bread is a bakery MVP focused on providing high-quality bread at competit
 - **💰 Price Comparison** - Clear pricing that shows savings vs market prices
 
 ### Admin Features (Future)
+
 - Order management
 - Inventory tracking
 - Customer analytics
@@ -50,6 +52,7 @@ wonder-bread/
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Python 3.8+
 - Node.js 16+
 - pip
@@ -58,21 +61,25 @@ wonder-bread/
 ### Backend Setup
 
 1. Navigate to backend directory:
+
 ```bash
 cd backend
 ```
 
 2. Install Python dependencies:
+
 ```bash
 pip install -r requirements.txt
 ```
 
 3. Initialize the database:
+
 ```bash
 python init_db.py
 ```
 
 4. Start the Flask server:
+
 ```bash
 python app.py
 ```
@@ -82,16 +89,19 @@ The backend API will be available at `http://localhost:5001`.
 ### Frontend Setup
 
 1. Navigate to frontend directory:
+
 ```bash
 cd frontend
 ```
 
 2. Install Node dependencies:
+
 ```bash
 npm install
 ```
 
 3. Start the development server:
+
 ```bash
 npm start
 ```
@@ -127,6 +137,7 @@ vercel --prod
    - Automatic deployment on every push
 
 ### API Endpoints (Deployed)
+
 ```
 https://your-domain.vercel.app/api/auth/login
 https://your-domain.vercel.app/api/auth/register
@@ -135,6 +146,7 @@ https://your-domain.vercel.app/api/orders
 ```
 
 ### Important Notes
+
 - The app uses `REACT_APP_WONDER_BREAD_API_URL=/api` in production
 - Vercel rewrites `/api/*` to Python serverless functions
 - Database: Currently uses SQLite (local to serverless). For production, use PostgreSQL/MySQL
@@ -143,6 +155,7 @@ https://your-domain.vercel.app/api/orders
 ## 🗄️ Database Schema
 
 ### Users Table
+
 ```sql
 CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -155,6 +168,7 @@ CREATE TABLE users (
 ```
 
 ### Orders Table
+
 ```sql
 CREATE TABLE orders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -168,6 +182,7 @@ CREATE TABLE orders (
 ```
 
 ### Addresses Table
+
 ```sql
 CREATE TABLE addresses (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -182,6 +197,7 @@ CREATE TABLE addresses (
 ```
 
 ### Preferences Table
+
 ```sql
 CREATE TABLE preferences (
     user_id INTEGER PRIMARY KEY,
@@ -195,12 +211,14 @@ CREATE TABLE preferences (
 ## 🔌 API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/register` - Register new user
 - `POST /api/auth/login` - Login and get JWT token
 - `POST /api/auth/logout` - Logout
 - `GET /api/auth/user` - Get current user (protected)
 
 ### Profile Management
+
 - `GET /api/profile` - Get user profile (protected)
 - `PUT /api/profile` - Update user profile (protected)
 - `GET /api/profile/addresses` - Get user addresses (protected)
@@ -208,19 +226,23 @@ CREATE TABLE preferences (
 - `PUT /api/profile/preferences` - Update preferences (protected)
 
 ### Menu
+
 - `GET /api/menu` - Get all bread products
 
 ### Orders
+
 - `POST /api/orders` - Create order (protected)
 - `GET /api/orders` - Get user orders (protected)
 - `GET /api/orders/:id` - Get specific order (protected)
 
 ### Health Check
+
 - `GET /api/health` - API health status
 
 ## 🎨 Design System
 
 ### Color Palette
+
 - **Primary:** `#D4A373` (Golden Brown)
 - **Secondary:** `#F5E6D3` (Cream)
 - **Accent:** `#8B4513` (Rich Brown)
@@ -229,6 +251,7 @@ CREATE TABLE preferences (
 - **Error:** `#F44336`
 
 ### Typography
+
 - Font Family: System fonts (San Francisco, Segoe UI, Roboto)
 - Headings: Bold, larger sizes
 - Body: Regular weight, readable line-height
@@ -236,12 +259,14 @@ CREATE TABLE preferences (
 ## 🧪 Testing
 
 ### Backend Tests
+
 ```bash
 cd backend
 python -m pytest test_app.py -v
 ```
 
 Tests cover:
+
 - User registration and login
 - Token authentication
 - Protected routes
@@ -249,6 +274,7 @@ Tests cover:
 - Profile updates
 
 ### Frontend Tests
+
 ```bash
 cd frontend
 npm test
@@ -259,16 +285,19 @@ npm test
 ### Vercel Deployment
 
 1. Install Vercel CLI:
+
 ```bash
 npm i -g vercel
 ```
 
 2. Deploy from project root:
+
 ```bash
 vercel
 ```
 
 3. Set environment variables in Vercel dashboard:
+
 ```
 JWT_SECRET_KEY=your-production-secret
 ```
@@ -276,26 +305,28 @@ JWT_SECRET_KEY=your-production-secret
 ### Environment Variables
 
 **Backend (.env):**
+
 ```
 JWT_SECRET_KEY=your-secret-key-here
 FLASK_ENV=production
 ```
 
 **Frontend (.env):**
+
 ```
 REACT_APP_WONDER_BREAD_API_URL=https://your-api-domain.com/api
 ```
 
 ## 📊 Product Catalog
 
-| Product | Price | Market Price | Weight | Description |
-|---------|-------|--------------|--------|-------------|
-| Large Loaf | ₦1,000 | ₦1,500 | 800g | Signature large loaf |
-| Medium Loaf | ₦700 | ₦1,000 | 500g | Perfect for small families |
-| Small Loaf | ₦500 | ₦700 | 300g | Individual serving |
-| Sliced Bread (Large) | ₦1,000 | ₦1,500 | 800g | Pre-sliced, 20 slices |
-| Sliced Bread (Small) | ₦600 | ₦850 | 400g | Pre-sliced, 12 slices |
-| Whole Wheat Bread | ₦1,200 | ₦1,700 | 750g | Healthy whole grain |
+| Product              | Price  | Market Price | Weight | Description                |
+| -------------------- | ------ | ------------ | ------ | -------------------------- |
+| Large Loaf           | ₦1,000 | ₦1,500       | 800g   | Signature large loaf       |
+| Medium Loaf          | ₦700   | ₦1,000       | 500g   | Perfect for small families |
+| Small Loaf           | ₦500   | ₦700         | 300g   | Individual serving         |
+| Sliced Bread (Large) | ₦1,000 | ₦1,500       | 800g   | Pre-sliced, 20 slices      |
+| Sliced Bread (Small) | ₦600   | ₦850         | 400g   | Pre-sliced, 12 slices      |
+| Whole Wheat Bread    | ₦1,200 | ₦1,700       | 750g   | Healthy whole grain        |
 
 ## 🎯 Key Value Propositions
 
@@ -329,11 +360,13 @@ MIT License
 ## 👨‍💻 Development
 
 ### Code Style
+
 - Python: Follow PEP 8
 - JavaScript: ESLint with React recommended rules
 - CSS: BEM methodology for class names
 
 ### Git Workflow
+
 - Feature branches for new features
 - Pull requests for code review
 - Semantic commit messages

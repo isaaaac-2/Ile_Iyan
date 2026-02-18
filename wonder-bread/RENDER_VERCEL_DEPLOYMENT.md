@@ -6,10 +6,10 @@ This guide explains how to deploy the **frontend to Vercel** and **backend to Re
 
 ## 🚀 Quick Overview
 
-| Component | Platform | Purpose |
-|-----------|----------|---------|
-| **Frontend** (React) | Vercel | Static site hosting + CDN |
-| **Backend** (Flask API) | Render | Python serverless functions |
+| Component               | Platform | Purpose                     |
+| ----------------------- | -------- | --------------------------- |
+| **Frontend** (React)    | Vercel   | Static site hosting + CDN   |
+| **Backend** (Flask API) | Render   | Python serverless functions |
 
 ---
 
@@ -35,11 +35,11 @@ This guide explains how to deploy the **frontend to Vercel** and **backend to Re
 
 1. **Name**: `wonder-bread-backend` (or similar)
 2. **Environment**: `Python 3`
-3. **Build Command**: 
+3. **Build Command**:
    ```bash
    cd backend && pip install -r requirements.txt
    ```
-4. **Start Command**: 
+4. **Start Command**:
    ```bash
    cd backend && gunicorn wonder_bread_app:app
    ```
@@ -55,6 +55,7 @@ FLASK_ENV=production
 ```
 
 Generate a secure key:
+
 ```bash
 python -c "import secrets; print(secrets.token_urlsafe(32))"
 ```
@@ -69,6 +70,7 @@ python -c "import secrets; print(secrets.token_urlsafe(32))"
 ### 1.5 Install gunicorn
 
 Add to `backend/requirements.txt`:
+
 ```
 gunicorn>=21.0.0
 ```
@@ -82,6 +84,7 @@ gunicorn>=21.0.0
 Before deploying, update the frontend to point to your Render backend:
 
 **File: `frontend/.env.production`**
+
 ```env
 REACT_APP_WONDER_BREAD_API_URL=https://wonder-bread-backend.onrender.com
 ```
@@ -151,6 +154,7 @@ npm start
 Frontend runs at: `http://localhost:3000`
 
 Set `.env.local` for local development:
+
 ```env
 REACT_APP_WONDER_BREAD_API_URL=http://localhost:5001
 ```
@@ -160,10 +164,12 @@ REACT_APP_WONDER_BREAD_API_URL=http://localhost:5001
 ## 🔄 Automatic Deployments
 
 ### Frontend (Vercel)
+
 - Automatically deploys on any push to `main` branch
 - Deployments take 1-2 minutes
 
 ### Backend (Render)
+
 - Automatically deploys on any push to `main` branch
 - Deployments take 2-3 minutes
 - First request after idle may take 10+ seconds (cold start)
@@ -173,9 +179,11 @@ REACT_APP_WONDER_BREAD_API_URL=http://localhost:5001
 ## ⚙️ Environment Variables
 
 ### Vercel (Frontend)
+
 No environment variables needed - API URL is in code
 
 ### Render (Backend)
+
 - `JWT_SECRET_KEY`: Secure random key (required)
 - `FLASK_ENV`: `production` (optional)
 - `DATABASE_URL`: Only if using external database
@@ -189,6 +197,7 @@ No environment variables needed - API URL is in code
 **Problem**: `Error: Failed to fetch from API`
 
 **Solutions**:
+
 1. Verify backend URL in `frontend/.env.production`
 2. Check Render backend is running: `https://your-backend.onrender.com/api/products`
 3. Ensure CORS is enabled in Flask (should be by default)
@@ -204,7 +213,8 @@ No environment variables needed - API URL is in code
 
 **Problem**: `Error: Database not found`
 
-**Solution**: 
+**Solution**:
+
 - SQLite won't persist between cold starts on Render
 - Use PostgreSQL instead:
   1. On Render, create PostgreSQL database
@@ -214,6 +224,7 @@ No environment variables needed - API URL is in code
 ### Deployment failed
 
 **Steps to debug**:
+
 1. Check build logs in Vercel/Render dashboard
 2. Verify all environment variables are set
 3. Ensure `requirements.txt` has all dependencies
@@ -253,9 +264,11 @@ git push origin main
 ### Add Environment Variables
 
 **Frontend (Vercel)**:
+
 - Dashboard → Project Settings → Environment Variables
 
 **Backend (Render)**:
+
 - Dashboard → Web Service → Environment
 - Add new variables
 - Auto-redeploys
@@ -265,10 +278,12 @@ git push origin main
 ## 📊 Monitoring
 
 ### Vercel Analytics
+
 - Dashboard shows deployments, builds, errors
 - Automatic performance monitoring
 
 ### Render Logs
+
 - Dashboard → Web Service → Logs
 - See real-time request logs and errors
 
@@ -291,12 +306,14 @@ Before going to production:
 ## 📈 Scalability
 
 ### Current Setup (Free Tier)
+
 - ✅ Perfect for MVP / testing
 - ✅ Handles moderate traffic (~1000 requests/day)
 - ⚠️ Cold starts may occur on Render backend
 - ⚠️ SQLite database won't persist
 
 ### Production Setup (Paid)
+
 - Use Vercel Pro for better performance
 - Use Render paid tier to prevent cold starts
 - Switch to PostgreSQL/MySQL for database
