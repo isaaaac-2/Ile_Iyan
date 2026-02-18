@@ -7,7 +7,11 @@
 /* Hero Section */
 .hero-section {
   padding: 4rem 0;
-  background: linear-gradient(135deg, var(--background-color) 0%, var(--secondary-color) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--background-color) 0%,
+    var(--secondary-color) 100%
+  );
 }
 
 .hero-content {
@@ -202,7 +206,11 @@
 }
 
 .dynamic-card {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--accent-color) 100%
+  );
   color: var(--white);
   padding: 2rem;
   border-radius: var(--radius-lg);
@@ -290,7 +298,11 @@
 }
 
 .offer-banner {
-  background: linear-gradient(135deg, var(--accent-color) 0%, var(--primary-color) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--accent-color) 0%,
+    var(--primary-color) 100%
+  );
   color: var(--white);
   padding: 3rem;
   border-radius: var(--radius-lg);
