@@ -69,9 +69,8 @@ function ProfilePage({ onNavigate }) {
       await updateProfile(formData);
       setProfile({ ...profile, ...formData });
       setEditing(false);
-      alert('Profile updated successfully!');
     } catch (err) {
-      alert('Failed to update profile');
+      console.error('Failed to update profile', err);
     }
   };
 

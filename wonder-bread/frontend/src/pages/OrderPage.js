@@ -25,13 +25,12 @@ function OrderPage({ onNavigate }) {
 
   const handleCheckout = async () => {
     if (!isAuthenticated) {
-      alert('Please login to complete your order');
       onNavigate('login');
       return;
     }
 
     if (cartItems.length === 0) {
-      alert('Your cart is empty');
+      setError('Your cart is empty');
       return;
     }
 
@@ -52,7 +51,6 @@ function OrderPage({ onNavigate }) {
 
       await createOrder(orderData);
       clearCart();
-      alert('Order placed successfully!');
       onNavigate('tracking');
     } catch (err) {
       setError(err.message || 'Failed to place order');
