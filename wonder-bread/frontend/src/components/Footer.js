@@ -2,9 +2,9 @@
  * Wonder Bread Footer Component
  */
 
-import React from 'react';
-import { useAuth } from '../context/AuthContext';
-import './Footer.css';
+import React from "react";
+import { useAuth } from "../context/AuthContext";
+import "./Footer.css";
 
 const Footer = () => {
   const { isAuthenticated } = useAuth();
@@ -26,7 +26,9 @@ const Footer = () => {
       <div className="wb-footer-container">
         <div className="wb-footer-section">
           <h3 className="wb-footer-title">🍞 Wonder Bread</h3>
-          <p className="wb-footer-tagline">Quality Bread, Prices That Make Sense</p>
+          <p className="wb-footer-tagline">
+            Quality Bread, Prices That Make Sense
+          </p>
           <p className="wb-footer-text">
             Fresh baked daily. Save ₦500 on every large loaf!
           </p>
@@ -35,10 +37,18 @@ const Footer = () => {
         <div className="wb-footer-section">
           <h4 className="wb-footer-heading">Quick Links</h4>
           <ul className="wb-footer-links">
-            <li><a href="/wonder-bread">Home</a></li>
-            <li><a href="/wonder-bread/menu">Menu</a></li>
-            <li><a href="/wonder-bread/orders">Orders</a></li>
-            <li><a href="/wonder-bread/profile">Profile</a></li>
+            <li>
+              <a href="/wonder-bread">Home</a>
+            </li>
+            <li>
+              <a href="/wonder-bread/menu">Menu</a>
+            </li>
+            <li>
+              <a href="/wonder-bread/orders">Orders</a>
+            </li>
+            <li>
+              <a href="/wonder-bread/profile">Profile</a>
+            </li>
           </ul>
         </div>
 

@@ -33,7 +33,10 @@ function OrderPage() {
 
   // Load orders when tab changes to ongoing or completed
   useEffect(() => {
-    if ((activeTab === "ongoing" || activeTab === "completed") && isAuthenticated) {
+    if (
+      (activeTab === "ongoing" || activeTab === "completed") &&
+      isAuthenticated
+    ) {
       loadOrders();
     }
   }, [activeTab, isAuthenticated]);
@@ -112,7 +115,10 @@ function OrderPage() {
     return (
       <div className="order-page">
         <div className="order-header">
-          <button className="back-btn" onClick={() => navigate("/wonder-bread/menu")}>
+          <button
+            className="back-btn"
+            onClick={() => navigate("/wonder-bread/menu")}
+          >
             ← Orders
           </button>
         </div>
@@ -157,11 +163,25 @@ function OrderPage() {
             <div className="tab-content orders-tab">
               {ordersLoading ? (
                 <div className="loading">Loading orders...</div>
-              ) : orders.some(o => ["pending", "confirmed", "baking", "ready", "out_for_delivery"].includes(o.status || "pending")) ? (
+              ) : orders.some((o) =>
+                  [
+                    "pending",
+                    "confirmed",
+                    "baking",
+                    "ready",
+                    "out_for_delivery",
+                  ].includes(o.status || "pending"),
+                ) ? (
                 <div className="orders-list">
                   {orders.map((order) => {
                     const orderStatus = order.status || "pending";
-                    const isOngoing = ["pending", "confirmed", "baking", "ready", "out_for_delivery"].includes(orderStatus);
+                    const isOngoing = [
+                      "pending",
+                      "confirmed",
+                      "baking",
+                      "ready",
+                      "out_for_delivery",
+                    ].includes(orderStatus);
 
                     if (!isOngoing) return null;
 
@@ -176,19 +196,29 @@ function OrderPage() {
                             </p>
                           </div>
                           <div className="order-amount">
-                            <p className="amount">₦{order.total.toLocaleString()}</p>
+                            <p className="amount">
+                              ₦{order.total.toLocaleString()}
+                            </p>
                             <p className="order-id">ORDER {order.id}</p>
                           </div>
                         </div>
 
                         <div className="order-status-section">
-                          <p className="status-label">Status: <strong>{orderStatus.replace("_", " ").toUpperCase()}</strong></p>
+                          <p className="status-label">
+                            Status:{" "}
+                            <strong>
+                              {orderStatus.replace("_", " ").toUpperCase()}
+                            </strong>
+                          </p>
                           <div className="status-bar">
                             <div className="progress-container">
                               <div className="progress-line"></div>
                             </div>
                           </div>
-                          <p className="status-time">Placed - {new Date(order.created_at).toLocaleTimeString()}</p>
+                          <p className="status-time">
+                            Placed -{" "}
+                            {new Date(order.created_at).toLocaleTimeString()}
+                          </p>
                         </div>
 
                         <button
@@ -221,11 +251,15 @@ function OrderPage() {
             <div className="tab-content orders-tab">
               {ordersLoading ? (
                 <div className="loading">Loading orders...</div>
-              ) : orders.some(o => ["delivered", "cancelled"].includes(o.status || "pending")) ? (
+              ) : orders.some((o) =>
+                  ["delivered", "cancelled"].includes(o.status || "pending"),
+                ) ? (
                 <div className="orders-list">
                   {orders.map((order) => {
                     const orderStatus = order.status || "pending";
-                    const isCompleted = ["delivered", "cancelled"].includes(orderStatus);
+                    const isCompleted = ["delivered", "cancelled"].includes(
+                      orderStatus,
+                    );
 
                     if (!isCompleted) return null;
 
@@ -240,19 +274,33 @@ function OrderPage() {
                             </p>
                           </div>
                           <div className="order-amount">
-                            <p className="amount">₦{order.total.toLocaleString()}</p>
+                            <p className="amount">
+                              ₦{order.total.toLocaleString()}
+                            </p>
                             <p className="order-id">ORDER {order.id}</p>
                           </div>
                         </div>
 
                         <div className="order-status-section">
-                          <p className="status-label">Status: <strong>{orderStatus.replace("_", " ").toUpperCase()}</strong></p>
+                          <p className="status-label">
+                            Status:{" "}
+                            <strong>
+                              {orderStatus.replace("_", " ").toUpperCase()}
+                            </strong>
+                          </p>
                           <div className="status-bar">
                             <div className="progress-container">
-                              <div className="progress-line" style={{ width: "100%" }}></div>
+                              <div
+                                className="progress-line"
+                                style={{ width: "100%" }}
+                              ></div>
                             </div>
                           </div>
-                          <p className="status-time">{orderStatus === "delivered" ? "Delivered" : "Cancelled"}</p>
+                          <p className="status-time">
+                            {orderStatus === "delivered"
+                              ? "Delivered"
+                              : "Cancelled"}
+                          </p>
                         </div>
 
                         <button
@@ -288,7 +336,10 @@ function OrderPage() {
   return (
     <div className="order-page">
       <div className="order-header">
-        <button className="back-btn" onClick={() => navigate("/wonder-bread/menu")}>
+        <button
+          className="back-btn"
+          onClick={() => navigate("/wonder-bread/menu")}
+        >
           ← Orders
         </button>
       </div>
@@ -415,11 +466,25 @@ function OrderPage() {
             {ordersLoading ? (
               <div className="loading">Loading orders...</div>
             ) : activeTab === "ongoing" ? (
-              orders.some(o => ["pending", "confirmed", "baking", "ready", "out_for_delivery"].includes(o.status || "pending")) ? (
+              orders.some((o) =>
+                [
+                  "pending",
+                  "confirmed",
+                  "baking",
+                  "ready",
+                  "out_for_delivery",
+                ].includes(o.status || "pending"),
+              ) ? (
                 <div className="orders-list">
                   {orders.map((order) => {
                     const orderStatus = order.status || "pending";
-                    const isOngoing = ["pending", "confirmed", "baking", "ready", "out_for_delivery"].includes(orderStatus);
+                    const isOngoing = [
+                      "pending",
+                      "confirmed",
+                      "baking",
+                      "ready",
+                      "out_for_delivery",
+                    ].includes(orderStatus);
 
                     if (!isOngoing) return null;
 
@@ -434,19 +499,29 @@ function OrderPage() {
                             </p>
                           </div>
                           <div className="order-amount">
-                            <p className="amount">₦{order.total.toLocaleString()}</p>
+                            <p className="amount">
+                              ₦{order.total.toLocaleString()}
+                            </p>
                             <p className="order-id">ORDER {order.id}</p>
                           </div>
                         </div>
 
                         <div className="order-status-section">
-                          <p className="status-label">Status: <strong>{orderStatus.replace("_", " ").toUpperCase()}</strong></p>
+                          <p className="status-label">
+                            Status:{" "}
+                            <strong>
+                              {orderStatus.replace("_", " ").toUpperCase()}
+                            </strong>
+                          </p>
                           <div className="status-bar">
                             <div className="progress-container">
                               <div className="progress-line"></div>
                             </div>
                           </div>
-                          <p className="status-time">Placed - {new Date(order.created_at).toLocaleTimeString()}</p>
+                          <p className="status-time">
+                            Placed -{" "}
+                            {new Date(order.created_at).toLocaleTimeString()}
+                          </p>
                         </div>
 
                         <button
@@ -472,11 +547,15 @@ function OrderPage() {
                   </button>
                 </div>
               )
-            ) : orders.some(o => ["delivered", "cancelled"].includes(o.status || "pending")) ? (
+            ) : orders.some((o) =>
+                ["delivered", "cancelled"].includes(o.status || "pending"),
+              ) ? (
               <div className="orders-list">
                 {orders.map((order) => {
                   const orderStatus = order.status || "pending";
-                  const isCompleted = ["delivered", "cancelled"].includes(orderStatus);
+                  const isCompleted = ["delivered", "cancelled"].includes(
+                    orderStatus,
+                  );
 
                   if (!isCompleted) return null;
 
@@ -491,19 +570,33 @@ function OrderPage() {
                           </p>
                         </div>
                         <div className="order-amount">
-                          <p className="amount">₦{order.total.toLocaleString()}</p>
+                          <p className="amount">
+                            ₦{order.total.toLocaleString()}
+                          </p>
                           <p className="order-id">ORDER {order.id}</p>
                         </div>
                       </div>
 
                       <div className="order-status-section">
-                        <p className="status-label">Status: <strong>{orderStatus.replace("_", " ").toUpperCase()}</strong></p>
+                        <p className="status-label">
+                          Status:{" "}
+                          <strong>
+                            {orderStatus.replace("_", " ").toUpperCase()}
+                          </strong>
+                        </p>
                         <div className="status-bar">
                           <div className="progress-container">
-                            <div className="progress-line" style={{ width: "100%" }}></div>
+                            <div
+                              className="progress-line"
+                              style={{ width: "100%" }}
+                            ></div>
                           </div>
                         </div>
-                        <p className="status-time">{orderStatus === "delivered" ? "Delivered" : "Cancelled"}</p>
+                        <p className="status-time">
+                          {orderStatus === "delivered"
+                            ? "Delivered"
+                            : "Cancelled"}
+                        </p>
                       </div>
 
                       <button

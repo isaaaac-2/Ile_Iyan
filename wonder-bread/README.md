@@ -98,6 +98,48 @@ npm start
 
 The frontend will be available at `http://localhost:3000`.
 
+## 🌍 Deployment to Vercel
+
+### Quick Deploy
+
+```bash
+npm install -g vercel
+vercel --prod
+```
+
+### Step-by-Step Guide
+
+1. **Connect to GitHub**
+   - Push your code to GitHub
+   - Go to [vercel.com](https://vercel.com)
+   - Click "Add New" → "Project"
+   - Select your repository
+
+2. **Configure Environment Variables**
+   In Vercel dashboard, add:
+   - `JWT_SECRET_KEY`: Your secret key (use `python -c "import secrets; print(secrets.token_urlsafe(32))"`)
+   - `FLASK_ENV`: `production`
+
+3. **Deploy**
+   - Vercel auto-detects configuration from `vercel.json`
+   - Frontend builds as static site
+   - Backend deploys as Python serverless functions
+   - Automatic deployment on every push
+
+### API Endpoints (Deployed)
+```
+https://your-domain.vercel.app/api/auth/login
+https://your-domain.vercel.app/api/auth/register
+https://your-domain.vercel.app/api/profile
+https://your-domain.vercel.app/api/orders
+```
+
+### Important Notes
+- The app uses `REACT_APP_WONDER_BREAD_API_URL=/api` in production
+- Vercel rewrites `/api/*` to Python serverless functions
+- Database: Currently uses SQLite (local to serverless). For production, use PostgreSQL/MySQL
+- See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed setup
+
 ## 🗄️ Database Schema
 
 ### Users Table

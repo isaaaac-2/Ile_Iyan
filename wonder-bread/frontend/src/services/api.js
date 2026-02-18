@@ -3,27 +3,28 @@
  * Handles all API communication with the backend
  */
 
-const API_BASE_URL = process.env.REACT_APP_WONDER_BREAD_API_URL || 'http://localhost:5001';
+const API_BASE_URL =
+  process.env.REACT_APP_WONDER_BREAD_API_URL || "http://localhost:5001";
 
 /**
  * Get authentication token from localStorage
  */
 const getAuthToken = () => {
-  return localStorage.getItem('wonderBreadToken');
+  return localStorage.getItem("wonderBreadToken");
 };
 
 /**
  * Set authentication token in localStorage
  */
 const setAuthToken = (token) => {
-  localStorage.setItem('wonderBreadToken', token);
+  localStorage.setItem("wonderBreadToken", token);
 };
 
 /**
  * Remove authentication token from localStorage
  */
 const removeAuthToken = () => {
-  localStorage.removeItem('wonderBreadToken');
+  localStorage.removeItem("wonderBreadToken");
 };
 
 /**
@@ -31,34 +32,36 @@ const removeAuthToken = () => {
  */
 const apiRequest = async (endpoint, options = {}) => {
   const token = getAuthToken();
-  
+
   const headers = {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
     ...options.headers,
   };
-  
+
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
-  
-  console.log(`[API] ${options.method || 'GET'} ${endpoint}`, { hasToken: !!token });
-  
+
+  console.log(`[API] ${options.method || "GET"} ${endpoint}`, {
+    hasToken: !!token,
+  });
+
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers,
   });
-  
+
   if (!response.ok) {
     let errorData;
     try {
       errorData = await response.json();
     } catch (e) {
-      errorData = { error: 'Request failed' };
+      errorData = { error: "Request failed" };
     }
     console.error(`[API Error] ${response.status}:`, errorData);
     throw new Error(errorData.error || `HTTP ${response.status}`);
   }
-  
+
   return response.json();
 };
 
@@ -68,15 +71,15 @@ const apiRequest = async (endpoint, options = {}) => {
  * Register new user
  */
 export const register = async (userData) => {
-  const response = await apiRequest('/api/auth/register', {
-    method: 'POST',
+  const response = await apiRequest("/api/auth/register", {
+    method: "POST",
     body: JSON.stringify(userData),
   });
-  
+
   if (response.access_token) {
     setAuthToken(response.access_token);
   }
-  
+
   return response;
 };
 
@@ -84,15 +87,15 @@ export const register = async (userData) => {
  * Login user
  */
 export const login = async (email, password) => {
-  const response = await apiRequest('/api/auth/login', {
-    method: 'POST',
+  const response = await apiRequest("/api/auth/login", {
+    method: "POST",
     body: JSON.stringify({ email, password }),
   });
-  
+
   if (response.access_token) {
     setAuthToken(response.access_token);
   }
-  
+
   return response;
 };
 
@@ -101,8 +104,8 @@ export const login = async (email, password) => {
  */
 export const logout = async () => {
   try {
-    await apiRequest('/api/auth/logout', {
-      method: 'POST',
+    await apiRequest("/api/auth/logout", {
+      method: "POST",
     });
   } finally {
     removeAuthToken();
@@ -113,7 +116,7 @@ export const logout = async () => {
  * Get current user
  */
 export const getCurrentUser = async () => {
-  return apiRequest('/api/auth/user');
+  return apiRequest("/api/auth/user");
 };
 
 // ─── Menu API ─────────────────────────────────────────────────────────────────
@@ -122,7 +125,7 @@ export const getCurrentUser = async () => {
  * Get bread products menu
  */
 export const getMenu = async () => {
-  return apiRequest('/api/menu');
+  return apiRequest("/api/menu");
 };
 
 // ─── Profile API ──────────────────────────────────────────────────────────────
@@ -131,15 +134,15 @@ export const getMenu = async () => {
  * Get user profile
  */
 export const getProfile = async () => {
-  return apiRequest('/api/profile');
+  return apiRequest("/api/profile");
 };
 
 /**
  * Update user profile
  */
 export const updateProfile = async (data) => {
-  return apiRequest('/api/profile', {
-    method: 'PUT',
+  return apiRequest("/api/profile", {
+    method: "PUT",
     body: JSON.stringify(data),
   });
 };
@@ -148,15 +151,15 @@ export const updateProfile = async (data) => {
  * Get delivery addresses
  */
 export const getAddresses = async () => {
-  return apiRequest('/api/profile/addresses');
+  return apiRequest("/api/profile/addresses");
 };
 
 /**
  * Add delivery address
  */
 export const addAddress = async (address) => {
-  return apiRequest('/api/profile/addresses', {
-    method: 'POST',
+  return apiRequest("/api/profile/addresses", {
+    method: "POST",
     body: JSON.stringify(address),
   });
 };
@@ -165,8 +168,8 @@ export const addAddress = async (address) => {
  * Update notification preferences
  */
 export const updatePreferences = async (prefs) => {
-  return apiRequest('/api/profile/preferences', {
-    method: 'PUT',
+  return apiRequest("/api/profile/preferences", {
+    method: "PUT",
     body: JSON.stringify(prefs),
   });
 };
@@ -177,8 +180,8 @@ export const updatePreferences = async (prefs) => {
  * Create new order
  */
 export const createOrder = async (orderData) => {
-  return apiRequest('/api/orders', {
-    method: 'POST',
+  return apiRequest("/api/orders", {
+    method: "POST",
     body: JSON.stringify(orderData),
   });
 };
@@ -187,7 +190,7 @@ export const createOrder = async (orderData) => {
  * Get user orders
  */
 export const getOrders = async () => {
-  return apiRequest('/api/orders');
+  return apiRequest("/api/orders");
 };
 
 /**

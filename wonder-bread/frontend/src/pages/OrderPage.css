@@ -2,7 +2,7 @@
 
 .order-page {
   min-height: 90vh;
-  background: #FAFAF8;
+  background: #fafaf8;
   padding: 0;
 }
 
@@ -24,7 +24,7 @@
 }
 
 .back-btn:hover {
-  color: #8B4513;
+  color: #8b4513;
 }
 
 /* Tab Navigation */
@@ -52,13 +52,13 @@
 
 .tab:hover {
   background: #fafafa;
-  color: #8B4513;
+  color: #8b4513;
 }
 
 .tab.active {
   background: white;
-  color: #8B4513;
-  border-bottom-color: #8B4513;
+  color: #8b4513;
+  border-bottom-color: #8b4513;
 }
 
 /* Container */
@@ -96,7 +96,7 @@
 
 .empty-cart h2 {
   font-size: 1.8rem;
-  color: #8B4513;
+  color: #8b4513;
   margin-bottom: 0.5rem;
 }
 
@@ -117,7 +117,7 @@
 
 .empty-state h2 {
   font-size: 1.8rem;
-  color: #8B4513;
+  color: #8b4513;
   margin-bottom: 0.5rem;
 }
 
@@ -174,7 +174,7 @@
   border-radius: 8px;
   overflow: hidden;
   flex-shrink: 0;
-  background: #F5E6D3;
+  background: #f5e6d3;
 }
 
 .item-image img {
@@ -189,7 +189,7 @@
 
 .item-details h3 {
   font-size: 1.1rem;
-  color: #8B4513;
+  color: #8b4513;
   margin-bottom: 0.25rem;
 }
 
@@ -214,9 +214,9 @@
 .qty-btn {
   width: 32px;
   height: 32px;
-  border: 2px solid #D4A373;
+  border: 2px solid #d4a373;
   background: white;
-  color: #D4A373;
+  color: #d4a373;
   border-radius: 6px;
   font-size: 1.2rem;
   cursor: pointer;
@@ -224,7 +224,7 @@
 }
 
 .qty-btn:hover {
-  background: #D4A373;
+  background: #d4a373;
   color: white;
 }
 
@@ -248,7 +248,7 @@
 .total-amount {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #D4A373;
+  color: #d4a373;
 }
 
 .remove-btn {
@@ -292,7 +292,7 @@
   padding-top: 1rem;
   font-size: 1.3rem;
   font-weight: 700;
-  color: #8B4513;
+  color: #8b4513;
 }
 
 .checkout-btn {
@@ -346,7 +346,7 @@
 .amount {
   font-size: 1.3rem;
   font-weight: 700;
-  color: #D4A373;
+  color: #d4a373;
   margin-bottom: 0.25rem;
 }
 
@@ -366,7 +366,7 @@
 }
 
 .status-label strong {
-  color: #8B4513;
+  color: #8b4513;
 }
 
 .status-bar {
@@ -376,7 +376,7 @@
 .progress-container {
   position: relative;
   height: 6px;
-  background: #E0E0E0;
+  background: #e0e0e0;
   border-radius: 3px;
   overflow: hidden;
 }
@@ -384,7 +384,7 @@
 .progress-line {
   height: 100%;
   width: 30%;
-  background: #8B4513;
+  background: #8b4513;
   border-radius: 3px;
   transition: width 0.3s ease;
 }
@@ -397,7 +397,7 @@
 .track-btn {
   width: 100%;
   padding: 0.75rem 1.5rem;
-  background: #8B4513;
+  background: #8b4513;
   color: white;
   border: none;
   border-radius: 6px;
@@ -408,7 +408,7 @@
 }
 
 .track-btn:hover {
-  background: #6B340D;
+  background: #6b340d;
 }
 
 .btn {
@@ -422,12 +422,12 @@
 }
 
 .btn-primary {
-  background-color: #D4A373;
+  background-color: #d4a373;
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #8B4513;
+  background-color: #8b4513;
 }
 
 .btn-primary:disabled {
@@ -437,12 +437,12 @@
 
 .btn-secondary {
   background-color: #fff;
-  color: #D4A373;
-  border: 2px solid #D4A373;
+  color: #d4a373;
+  border: 2px solid #d4a373;
 }
 
 .btn-secondary:hover {
-  background-color: #D4A373;
+  background-color: #d4a373;
   color: white;
 }
 

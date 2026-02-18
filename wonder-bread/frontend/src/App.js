@@ -20,14 +20,14 @@ import "./WonderBreadApp.css";
 
 function AppContent() {
   const location = useLocation();
-  
+
   // Pages where footer should NOT be shown (pre-auth pages)
   const noFooterPages = [
     "/wonder-bread",
     "/wonder-bread/login",
-    "/wonder-bread/signup"
+    "/wonder-bread/signup",
   ];
-  
+
   const showFooter = !noFooterPages.includes(location.pathname);
 
   return (

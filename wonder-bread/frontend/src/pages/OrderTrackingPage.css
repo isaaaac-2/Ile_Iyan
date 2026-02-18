@@ -26,7 +26,7 @@
 
 .no-orders h2 {
   font-size: 1.8rem;
-  color: #8B4513;
+  color: #8b4513;
   margin-bottom: 0.5rem;
 }
 
@@ -37,7 +37,7 @@
 
 .tracking-container h1 {
   font-size: 2rem;
-  color: #8B4513;
+  color: #8b4513;
   margin-bottom: 2rem;
   text-align: center;
 }
@@ -80,7 +80,7 @@
 
 .order-info-card h2 {
   font-size: 1.5rem;
-  color: #8B4513;
+  color: #8b4513;
   margin-bottom: 0.5rem;
 }
 
@@ -133,12 +133,12 @@
 }
 
 .status-step.completed .status-icon {
-  background: #4CAF50;
+  background: #4caf50;
   color: white;
 }
 
 .status-step.active .status-icon {
-  background: #D4A373;
+  background: #d4a373;
   color: white;
   animation: pulse 2s infinite;
 }
@@ -167,7 +167,7 @@
 }
 
 .status-step.completed .status-line {
-  background: #4CAF50;
+  background: #4caf50;
 }
 
 .order-items-card {
@@ -179,7 +179,7 @@
 
 .order-items-card h3 {
   font-size: 1.3rem;
-  color: #8B4513;
+  color: #8b4513;
   margin-bottom: 1rem;
 }
 
@@ -214,7 +214,7 @@
 
 .item-price {
   font-weight: 600;
-  color: #D4A373;
+  color: #d4a373;
 }
 
 .order-total-row {
@@ -227,11 +227,11 @@
 }
 
 .total-amount {
-  color: #D4A373;
+  color: #d4a373;
 }
 
 .estimated-delivery {
-  background: linear-gradient(135deg, #D4A373 0%, #8B4513 100%);
+  background: linear-gradient(135deg, #d4a373 0%, #8b4513 100%);
   color: white;
   padding: 1.5rem;
   border-radius: 12px;
@@ -266,16 +266,17 @@
 }
 
 .btn-primary {
-  background-color: #D4A373;
+  background-color: #d4a373;
   color: white;
 }
 
 .btn-primary:hover {
-  background-color: #8B4513;
+  background-color: #8b4513;
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {

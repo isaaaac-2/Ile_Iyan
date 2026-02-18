@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: wonder-bread-backend
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: cd backend && pip install -r requirements.txt
+    startCommand: cd backend && gunicorn wonder_bread_app:app
+    envVars:
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: FLASK_ENV
+        value: production
+    autoDeploy: true
