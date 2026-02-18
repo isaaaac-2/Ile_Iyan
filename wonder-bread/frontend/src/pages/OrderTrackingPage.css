@@ -308,4 +308,68 @@
     flex-direction: column;
     gap: 0.5rem;
   }
+
+/* Order Tabs Styling */
+.order-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #eee;
+}
+
+.order-tabs .tab {
+  padding: 1rem;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #888;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.order-tabs .tab:hover {
+  color: #8B4513;
+}
+
+.order-tabs .tab.active {
+  color: #8B4513;
+  border-bottom-color: #8B4513;
+}
+
+.tab-count {
+  display: inline-block;
+  margin-left: 0.5rem;
+  background-color: #8B4513;
+  color: white;
+  border-radius: 12px;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+.no-orders-tab {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.empty-message {
+  padding: 2rem;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.empty-message h2 {
+  font-size: 1.5rem;
+  color: #8B4513;
+  margin-bottom: 0.5rem;
+}
+
+.empty-message p {
+  color: #666;
+  margin-bottom: 1.5rem;
 }

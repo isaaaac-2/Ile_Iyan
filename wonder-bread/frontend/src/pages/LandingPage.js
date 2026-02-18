@@ -4,9 +4,11 @@
  */
 
 import React, { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 import "./LandingPage.css";
 
 const LandingPage = ({ onNavigate }) => {
+  const { isAuthenticated } = useAuth();
   const [loavesBaked, setLoavesBaked] = useState(1247);
   const [countdown, setCountdown] = useState(45);
   const [testimonialIndex, setTestimonialIndex] = useState(0);
@@ -77,12 +79,22 @@ const LandingPage = ({ onNavigate }) => {
             >
               Order Now
             </button>
-            <button
-              onClick={() => onNavigate("signup")}
-              className="wb-btn wb-btn-outline wb-btn-lg"
-            >
-              Sign Up for Deals
-            </button>
+            {!isAuthenticated && (
+              <button
+                onClick={() => onNavigate("signup")}
+                className="wb-btn wb-btn-outline wb-btn-lg"
+              >
+                Sign Up for Deals
+              </button>
+            )}
+            {isAuthenticated && (
+              <button
+                onClick={() => onNavigate("tracking")}
+                className="wb-btn wb-btn-outline wb-btn-lg"
+              >
+                View My Orders
+              </button>
+            )}
           </div>
         </div>
         <div className="hero-animation">
@@ -237,6 +249,6 @@ const LandingPage = ({ onNavigate }) => {
       </section>
     </div>
   );
-};
+}
 
 export default LandingPage;

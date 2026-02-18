@@ -20,7 +20,7 @@ function LoginPage({ onNavigate }) {
     
     try {
       await login(email, password);
-      onNavigate('profile');
+      onNavigate('landing');
     } catch (err) {
       setError(err.message || 'Invalid email or password');
     }

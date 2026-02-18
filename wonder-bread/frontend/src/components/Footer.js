@@ -6,6 +6,19 @@ import React from "react";
 import "./Footer.css";
 
 const Footer = ({ currentPage, onNavigate }) => {
+  // Show minimal footer (only copyright) on login and signup pages
+  const isAuthPage = currentPage === "login" || currentPage === "signup";
+
+  if (isAuthPage) {
+    return (
+      <footer className="wb-footer wb-footer-minimal">
+        <div className="wb-footer-bottom">
+          <p>&copy; 2026 Wonder Bread. All rights reserved.</p>
+        </div>
+      </footer>
+    );
+  }
+
   return (
     <footer className="wb-footer">
       <div className="wb-footer-container">

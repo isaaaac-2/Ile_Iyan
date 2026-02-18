@@ -73,17 +73,6 @@ const Navbar = ({ currentPage, onNavigate }) => {
               >
                 My Orders
               </button>
-              <button
-                onClick={() => onNavigate("profile")}
-                className={`wb-nav-link ${isActive("profile")}`}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                Profile
-              </button>
             </>
           )}
         </div>
