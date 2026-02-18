@@ -15,7 +15,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .wb-navbar-brand {
@@ -27,6 +27,7 @@
   font-weight: 700;
   color: var(--accent-color);
   transition: transform 0.3s ease;
+  flex-shrink: 0;
 }
 
 .wb-navbar-brand:hover {
@@ -43,7 +44,7 @@
 
 .wb-navbar-links {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
   flex: 1;
   justify-content: center;
 }
@@ -55,6 +56,7 @@
   padding: 0.5rem 1rem;
   border-radius: var(--radius-md);
   transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
 .wb-nav-link:hover {
@@ -70,7 +72,8 @@
 .wb-navbar-actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
+  flex-shrink: 0;
 }
 
 .wb-cart-link {
@@ -79,6 +82,11 @@
   text-decoration: none;
   padding: 0.5rem;
   transition: transform 0.3s ease;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .wb-cart-link:hover {
@@ -104,42 +112,111 @@
 .wb-user-menu {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .wb-user-name {
   color: var(--text-dark);
   font-weight: 600;
+  font-size: 0.95rem;
 }
 
 .wb-btn-sm {
   padding: 8px 16px;
   font-size: 0.875rem;
+  min-width: 70px;
 }
 
-/* Mobile responsive */
+/* Tablet (768px) */
 @media (max-width: 768px) {
   .wb-navbar-container {
     flex-wrap: wrap;
-    padding: 1rem;
+    padding: 0.75rem 1rem;
+    gap: 0.75rem;
+  }
+
+  .wb-navbar-brand {
+    font-size: 1.25rem;
+  }
+
+  .wb-navbar-icon {
+    font-size: 1.5rem;
+  }
+
+  .wb-navbar-title {
+    display: none;
   }
 
   .wb-navbar-links {
     order: 3;
     width: 100%;
-    justify-content: space-around;
+    justify-content: flex-start;
     gap: 0.5rem;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     border-top: 1px solid var(--secondary-color);
-    padding-top: 1rem;
+    padding-top: 0.75rem;
+    flex-wrap: wrap;
   }
 
   .wb-nav-link {
-    padding: 0.5rem;
-    font-size: 0.875rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .wb-navbar-actions {
+    gap: 0.5rem;
+  }
+
+  .wb-user-menu {
+    gap: 0.5rem;
   }
 
   .wb-user-name {
     display: none;
+  }
+
+  .wb-btn-sm {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    min-width: 60px;
+  }
+}
+
+/* Mobile (480px) */
+@media (max-width: 480px) {
+  .wb-navbar-container {
+    padding: 0.5rem 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .wb-navbar-brand {
+    font-size: 1.1rem;
+  }
+
+  .wb-navbar-icon {
+    font-size: 1.25rem;
+  }
+
+  .wb-navbar-links {
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+  }
+
+  .wb-nav-link {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.7rem;
+  }
+
+  .wb-btn-sm {
+    padding: 5px 10px;
+    font-size: 0.7rem;
+    min-width: 55px;
+  }
+
+  .wb-cart-link {
+    font-size: 1.25rem;
+    min-width: 40px;
+    min-height: 40px;
   }
 }

@@ -33,20 +33,24 @@ const Navbar = ({ currentPage, onNavigate }) => {
         </button>
 
         <div className="wb-navbar-links">
-          <button
-            onClick={() => onNavigate("landing")}
-            className={`wb-nav-link ${isActive("landing")}`}
-            style={{ background: "none", border: "none", cursor: "pointer" }}
-          >
-            Home
-          </button>
-          <button
-            onClick={() => onNavigate("menu")}
-            className={`wb-nav-link ${isActive("menu")}`}
-            style={{ background: "none", border: "none", cursor: "pointer" }}
-          >
-            Menu
-          </button>
+          {isAuthenticated && (
+            <>
+              <button
+                onClick={() => onNavigate("landing")}
+                className={`wb-nav-link ${isActive("landing")}`}
+                style={{ background: "none", border: "none", cursor: "pointer" }}
+              >
+                Home
+              </button>
+              <button
+                onClick={() => onNavigate("menu")}
+                className={`wb-nav-link ${isActive("menu")}`}
+                style={{ background: "none", border: "none", cursor: "pointer" }}
+              >
+                Menu
+              </button>
+            </>
+          )}
 
           {isAuthenticated && (
             <>
