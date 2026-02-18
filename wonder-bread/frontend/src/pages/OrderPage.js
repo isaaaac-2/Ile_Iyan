@@ -9,7 +9,7 @@ import { createOrder } from "../services/api";
 import "./OrderPage.css";
 
 function OrderPage({ onNavigate }) {
-  const { cartItems, removeFromCart, updateQuantity, clearCart, getCartTotal } =
+  const { cart, removeFromCart, updateQuantity, clearCart, getTotal } =
     useCart();
   const { isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -26,7 +26,7 @@ function OrderPage({ onNavigate }) {
   };
 
   const handleCheckout = async () => {
-    if (cartItems.length === 0) {
+    if (cart.length === 0) {
       setError("Your cart is empty");
       return;
     }
@@ -43,13 +43,13 @@ function OrderPage({ onNavigate }) {
 
     try {
       const orderData = {
-        items: cartItems.map((item) => ({
+        items: cart.map((item) => ({
           product_id: item.id,
           name: item.name,
           price: item.price,
           quantity: item.quantity,
         })),
-        total: getCartTotal(),
+        total: getTotal(),
         delivery_address_id: null,
       };
 
@@ -64,7 +64,7 @@ function OrderPage({ onNavigate }) {
     }
   };
 
-  if (cartItems.length === 0) {
+  if (cart.length === 0) {
     return (
       <div className="order-page">
         <div className="empty-cart">
@@ -91,7 +91,7 @@ function OrderPage({ onNavigate }) {
         {success && <div className="alert alert-success">{success}</div>}
 
         <div className="cart-items">
-          {cartItems.map((item) => (
+          {cart.map((item) => (
             <div key={item.id} className="cart-item">
               <div className="item-image">
                 <img
@@ -152,7 +152,7 @@ function OrderPage({ onNavigate }) {
         <div className="cart-summary">
           <div className="summary-row">
             <span>Subtotal:</span>
-            <span>₦{getCartTotal().toLocaleString()}</span>
+            <span>₦{getTotal().toLocaleString()}</span>
           </div>
           <div className="summary-row">
             <span>Delivery:</span>
@@ -160,7 +160,7 @@ function OrderPage({ onNavigate }) {
           </div>
           <div className="summary-row total">
             <span>Total:</span>
-            <span>₦{getCartTotal().toLocaleString()}</span>
+            <span>₦{getTotal().toLocaleString()}</span>
           </div>
 
           <button
