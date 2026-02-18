@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "framework": "react",
   "buildCommand": "cd frontend && npm install && npm run build",
   "outputDirectory": "frontend/build",
   "rewrites": [
@@ -8,8 +7,5 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ],
-  "env": {
-    "JWT_SECRET_KEY": "@wonder_bread_jwt_secret"
-  }
+  ]
 }
