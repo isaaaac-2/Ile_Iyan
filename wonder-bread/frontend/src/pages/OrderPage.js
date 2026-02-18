@@ -14,6 +14,7 @@ function OrderPage({ onNavigate }) {
   const { isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleQuantityChange = (itemId, newQuantity) => {
     if (newQuantity < 1) return;
@@ -25,18 +26,20 @@ function OrderPage({ onNavigate }) {
   };
 
   const handleCheckout = async () => {
-    if (!isAuthenticated) {
-      onNavigate("login");
-      return;
-    }
-
     if (cartItems.length === 0) {
       setError("Your cart is empty");
       return;
     }
 
+    if (!isAuthenticated) {
+      setError("Please login to complete your order");
+      setTimeout(() => onNavigate("login"), 1500);
+      return;
+    }
+
     setLoading(true);
     setError("");
+    setSuccess("");
 
     try {
       const orderData = {
@@ -47,12 +50,13 @@ function OrderPage({ onNavigate }) {
           quantity: item.quantity,
         })),
         total: getCartTotal(),
-        delivery_address_id: null, // Will be set in future version
+        delivery_address_id: null,
       };
 
       await createOrder(orderData);
       clearCart();
-      onNavigate("tracking");
+      setSuccess("Order placed successfully!");
+      setTimeout(() => onNavigate("tracking"), 1500);
     } catch (err) {
       setError(err.message || "Failed to place order");
     } finally {
@@ -83,7 +87,8 @@ function OrderPage({ onNavigate }) {
       <div className="order-container">
         <h1>Your Cart</h1>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && <div className="alert alert-error">{error}</div>}
+        {success && <div className="alert alert-success">{success}</div>}
 
         <div className="cart-items">
           {cartItems.map((item) => (

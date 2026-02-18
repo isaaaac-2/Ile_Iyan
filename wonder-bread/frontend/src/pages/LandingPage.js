@@ -4,7 +4,6 @@
  */
 
 import React, { useState, useEffect } from "react";
-import BreadAnimation from "../components/BreadAnimation";
 import "./LandingPage.css";
 
 const LandingPage = ({ onNavigate }) => {
@@ -87,7 +86,7 @@ const LandingPage = ({ onNavigate }) => {
           </div>
         </div>
         <div className="hero-animation">
-          <BreadAnimation />
+          <div className="empty-animation" />
         </div>
       </section>
 

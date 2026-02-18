@@ -49,6 +49,10 @@
   margin: 0 auto;
 }
 
+.empty-animation {
+  height: 400px;
+}
+
 /* Comparison Section */
 .comparison-section {
   padding: 4rem 0;
