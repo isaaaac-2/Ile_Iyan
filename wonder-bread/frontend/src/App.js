@@ -54,7 +54,7 @@ function App() {
           <main className="main-content">
             {renderPage()}
           </main>
-          <Footer onNavigate={navigate} />
+          <Footer currentPage={currentPage} onNavigate={navigate} />
         </div>
       </CartProvider>
     </AuthProvider>

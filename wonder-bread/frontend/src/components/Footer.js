@@ -5,7 +5,7 @@
 import React from 'react';
 import './Footer.css';
 
-const Footer = () => {
+const Footer = ({ currentPage, onNavigate }) => {
   return (
     <footer className="wb-footer">
       <div className="wb-footer-container">
@@ -20,10 +20,10 @@ const Footer = () => {
         <div className="wb-footer-section">
           <h4 className="wb-footer-heading">Quick Links</h4>
           <ul className="wb-footer-links">
-            <li><a href="/wonder-bread">Home</a></li>
-            <li><a href="/wonder-bread/menu">Menu</a></li>
-            <li><a href="/wonder-bread/orders">Orders</a></li>
-            <li><a href="/wonder-bread/profile">Profile</a></li>
+            <li><button onClick={() => onNavigate('landing')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}>Home</button></li>
+            <li><button onClick={() => onNavigate('menu')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}>Menu</button></li>
+            <li><button onClick={() => onNavigate('tracking')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}>Orders</button></li>
+            <li><button onClick={() => onNavigate('profile')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}>Profile</button></li>
           </ul>
         </div>
 

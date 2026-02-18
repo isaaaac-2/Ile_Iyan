@@ -3,59 +3,60 @@
  */
 
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import './Navbar.css';
 
-const Navbar = () => {
+const Navbar = ({ currentPage, onNavigate }) => {
   const { user, isAuthenticated, logout } = useAuth();
   const { getItemCount } = useCart();
-  const location = useLocation();
 
   const handleLogout = async () => {
     await logout();
+    onNavigate('landing');
   };
 
-  const isActive = (path) => {
-    return location.pathname === path ? 'active' : '';
+  const isActive = (page) => {
+    return currentPage === page ? 'active' : '';
   };
 
   return (
     <nav className="wb-navbar">
       <div className="wb-navbar-container">
-        <Link to="/wonder-bread" className="wb-navbar-brand">
+        <button onClick={() => onNavigate('landing')} className="wb-navbar-brand" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
           <span className="wb-navbar-icon">🍞</span>
           <span className="wb-navbar-title">Wonder Bread</span>
-        </Link>
+        </button>
 
         <div className="wb-navbar-links">
-          <Link to="/wonder-bread" className={`wb-nav-link ${isActive('/wonder-bread')}`}>
+          <button onClick={() => onNavigate('landing')} className={`wb-nav-link ${isActive('landing')}`} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
             Home
-          </Link>
-          <Link to="/wonder-bread/menu" className={`wb-nav-link ${isActive('/wonder-bread/menu')}`}>
+          </button>
+          <button onClick={() => onNavigate('menu')} className={`wb-nav-link ${isActive('menu')}`} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
             Menu
-          </Link>
+          </button>
           
           {isAuthenticated && (
             <>
-              <Link to="/wonder-bread/orders" className={`wb-nav-link ${isActive('/wonder-bread/orders')}`}>
+              <button onClick={() => onNavigate('tracking')} className={`wb-nav-link ${isActive('tracking')}`} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
                 My Orders
-              </Link>
-              <Link to="/wonder-bread/profile" className={`wb-nav-link ${isActive('/wonder-bread/profile')}`}>
+              </button>
+              <button onClick={() => onNavigate('profile')} className={`wb-nav-link ${isActive('profile')}`} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
                 Profile
-              </Link>
+              </button>
             </>
           )}
         </div>
 
         <div className="wb-navbar-actions">
-          <Link to="/wonder-bread/cart" className="wb-cart-link">
-            🛒
-            {getItemCount() > 0 && (
-              <span className="wb-cart-badge">{getItemCount()}</span>
-            )}
-          </Link>
+          {isAuthenticated && (
+            <button onClick={() => onNavigate('order')} className="wb-cart-link" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+              🛒
+              {getItemCount() > 0 && (
+                <span className="wb-cart-badge">{getItemCount()}</span>
+              )}
+            </button>
+          )}
 
           {isAuthenticated ? (
             <div className="wb-user-menu">
@@ -65,9 +66,14 @@ const Navbar = () => {
               </button>
             </div>
           ) : (
-            <Link to="/wonder-bread/login" className="wb-btn wb-btn-primary wb-btn-sm">
-              Login
-            </Link>
+            <>
+              <button onClick={() => onNavigate('login')} className="wb-btn wb-btn-primary wb-btn-sm">
+                Login
+              </button>
+              <button onClick={() => onNavigate('signup')} className="wb-btn wb-btn-primary wb-btn-sm">
+                Sign Up
+              </button>
+            </>
           )}
         </div>
       </div>
