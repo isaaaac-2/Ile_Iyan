@@ -4,11 +4,10 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import BreadAnimation from '../components/BreadAnimation';
 import './LandingPage.css';
 
-const LandingPage = () => {
+const LandingPage = ({ onNavigate }) => {
   const [loavesBaked, setLoavesBaked] = useState(1247);
   const [countdown, setCountdown] = useState(45);
   const [testimonialIndex, setTestimonialIndex] = useState(0);
@@ -72,12 +71,12 @@ const LandingPage = () => {
             Fresh baked daily. Large loaf at <span className="price-highlight">₦1,000</span>
           </p>
           <div className="hero-actions wb-fade-in">
-            <Link to="/wonder-bread/menu" className="wb-btn wb-btn-primary wb-btn-lg">
+            <button onClick={() => onNavigate('menu')} className="wb-btn wb-btn-primary wb-btn-lg">
               Order Now
-            </Link>
-            <Link to="/wonder-bread/signup" className="wb-btn wb-btn-outline wb-btn-lg">
+            </button>
+            <button onClick={() => onNavigate('signup')} className="wb-btn wb-btn-outline wb-btn-lg">
               Sign Up for Deals
-            </Link>
+            </button>
           </div>
         </div>
         <div className="hero-animation">
@@ -195,9 +194,9 @@ const LandingPage = () => {
             <p className="offer-text">
               Sign up today and get <strong>10% off</strong> your first order!
             </p>
-            <Link to="/wonder-bread/signup" className="wb-btn wb-btn-secondary">
+            <button onClick={() => onNavigate('signup')} className="wb-btn wb-btn-secondary">
               Claim Your Discount
-            </Link>
+            </button>
           </div>
         </div>
       </section>
@@ -209,9 +208,9 @@ const LandingPage = () => {
           <p className="cta-text">
             Join thousands of satisfied customers. Order now and taste the difference!
           </p>
-          <Link to="/wonder-bread/menu" className="wb-btn wb-btn-primary wb-btn-lg">
+          <button onClick={() => onNavigate('menu')} className="wb-btn wb-btn-primary wb-btn-lg">
             View Our Menu
-          </Link>
+          </button>
         </div>
       </section>
     </div>
