@@ -9,7 +9,7 @@ import { createOrder } from '../services/api';
 import './OrderPage.css';
 
 function OrderPage({ onNavigate }) {
-  const { cartItems, removeFromCart, updateQuantity, clearCart, getCartTotal } = useCart();
+  const { cart, removeFromCart, updateQuantity, clearCart, getTotal } = useCart();
   const { isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -40,13 +40,13 @@ function OrderPage({ onNavigate }) {
 
     try {
       const orderData = {
-        items: cartItems.map(item => ({
+        items: cart.map(item => ({
           product_id: item.id,
           name: item.name,
           price: item.price,
           quantity: item.quantity
         })),
-        total: getCartTotal(),
+        total: getTotal(),
         delivery_address_id: null // Will be set in future version
       };
 
@@ -84,7 +84,7 @@ function OrderPage({ onNavigate }) {
         {error && <div className="error-message">{error}</div>}
 
         <div className="cart-items">
-          {cartItems.map((item) => (
+          {cart.map((item) => (
             <div key={item.id} className="cart-item">
               <div className="item-image">
                 <img 
@@ -137,7 +137,7 @@ function OrderPage({ onNavigate }) {
         <div className="cart-summary">
           <div className="summary-row">
             <span>Subtotal:</span>
-            <span>₦{getCartTotal().toLocaleString()}</span>
+            <span>₦{getTotal().toLocaleString()}</span>
           </div>
           <div className="summary-row">
             <span>Delivery:</span>
@@ -145,7 +145,7 @@ function OrderPage({ onNavigate }) {
           </div>
           <div className="summary-row total">
             <span>Total:</span>
-            <span>₦{getCartTotal().toLocaleString()}</span>
+            <span>₦{getTotal().toLocaleString()}</span>
           </div>
 
           <button
